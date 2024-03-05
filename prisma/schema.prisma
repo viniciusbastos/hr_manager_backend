@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  extensions = [uuidOssp(map: "uuid-ossp")]
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String?   @unique
+  mat       String?   @unique @db.Char(8)
+  posto     String?   
+  name      String 
+  password  String  
+  createdAt DateTime @default(now())
+  profile   Profile[]
+  Vacation Vacation[]
+  Sicknote Sicknote[]
+  Course   Course[]
+}
+
+model Vacation {
+  id          String    @id @default(uuid())
+  month       Int 
+  year        Int         
+  period      String?
+  approved    Boolean? @default(false)
+  startAt     DateTime? 
+  finishAt    DateTime? 
+  createdAt   DateTime @default(now())
+  belongsTo   User     @relation(fields: [belongsToId], references: [id])
+  belongsToId String
+  bio           Bio? @relation(fields: [bioId], references: [id])
+  bioId         Int?
+  
+}
+
+model Sicknote {
+  id            Int   @id @default(autoincrement())
+  InitialDate   DateTime 
+  FinalDate     DateTime 
+  Days          Int
+  Cid           String?
+  Obs           String?
+  approved      Boolean @default(false)
+  createdAt     DateTime @default(now())
+  belongsTo     User     @relation(fields: [belongsToId], references: [id])
+  belongsToId   String
+  bio           Bio? @relation(fields: [bioId], references: [id])
+  bioId         Int?
+}
+
+model Profile {
+  id     Int     @id @default(autoincrement())
+  bio    String?
+  photo  String?
+  adress String
+  neighborhood String? 
+  city   String?
+  state  String?
+  phone  String
+  cpf       String?
+  serviceTime DateTime? @db.Date
+  workplace String?
+  belongsTo     User     @relation(fields: [belongsToId], references: [id])
+  belongsToId String     
+}
+
+model Course {
+  id            Int   @id @default(autoincrement())
+  InitialDate   DateTime 
+  FinalDate     DateTime 
+  name          String?
+  progress      Boolean @default(false)
+  createdAt     DateTime @default(now())
+  belongsTo     User     @relation(fields: [belongsToId], references: [id])
+  belongsToId   String
+  bio           Bio? @relation(fields: [bioId], references: [id])
+  bioId         Int?
+  
+}
+
+model Bio {
+  id            Int   @id @default(autoincrement())
+  InitialDate   DateTime 
+  FinalDate     DateTime 
+  name          String
+  progress      Boolean @default(false)
+  createdAt     DateTime @default(now())
+  Sicknote      Sicknote[]
+  Vacation      Vacation[]
+  Course        Course[]
+  
+}
