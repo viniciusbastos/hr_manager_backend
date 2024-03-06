@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { body, validationResult } from 'express-validator'
 import { createUser, deleteUser } from './handlers/userHandlers'
 import { handleInputErrors } from './modules/middleware'
+import { deleteVacation } from './handlers/vacationHadlers'
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -107,7 +108,7 @@ router.post('/vacation', handleInputErrors, async (req, res) => {
   })
 })
 
-router.delete('/vacation/:id', (req, res) => {})
+router.delete('/vacation/:id', deleteVacation)
 
 /**
  * UpdatePoint
