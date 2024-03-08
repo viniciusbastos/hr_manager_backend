@@ -84,7 +84,7 @@ router.get('/vacation/month/:month', async (req, res) => {
   const { month } = req.params
   const intMonth = parseInt(month)
   const vacation: any =
-    await prisma.$queryRaw`SELECT "User".id, "User"."name", "User".posto, "User".mat, "Vacation"."month","Vacation"."year", "Vacation"."period", "Vacation"."startAt", "Vacation"."finishAt" FROM "User" INNER join "Vacation" ON "User".id = "Vacation"."belongsToId" WHERE "Vacation"."month" = ${intMonth} ORDER BY "User".posto desc  `
+    await prisma.$queryRaw`SELECT "User".id, "User"."name", "User".posto, "User".mat, "Vacation"."month","Vacation"."year", "Vacation"."period", "Vacation"."startAt", "Vacation"."finishAt" FROM "User" INNER join "Vacation" ON "User".id = "Vacation"."belongsToId" WHERE "Vacation"."month" = ${intMonth} ORDER BY "User".posto asc  `
   res.json({ vacation })
 })
 

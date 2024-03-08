@@ -1,4 +1,5 @@
-import merge from "lodash.merge";
+import merge from 'lodash.merge'
+
 
 // make sure NODE_ENV is set
 process.env.NODE_ENV = process.env.NODE_ENV || "development";
