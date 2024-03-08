@@ -36,7 +36,7 @@ app.use(cors())
 app.post('/user', createUser)
 app.post('/signin', signin)
 app.get('/', async (req, res) => {
-  const user = await prisma.user.find({
+  const user = await prisma.user.findMany({
     include: {
       Vacation: true,
       profile: true
