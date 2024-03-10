@@ -45,7 +45,7 @@ router.get('/user/search/:mat', async (req, res, next) => {
   try {
     const { mat } = req.params
     const user: any =
-      await prisma.$queryRaw`SELECT "User".id, "User"."name", "User".posto, "User".mat FROM "User" WHERE "User"."mat" LIKE ${mat} `
+      await prisma.$queryRaw`SELECT "User".id, "User"."name", "User".posto, "User".mat, "Vacation"."month", "Vacation"."year", "Vacation"."startAt", "Vacation"."finishAt", "Vacation".approved, "Vacation"."period" FROM "public"."User" INNER JOIN "Vacation" on "User".id = "Vacation"."belongsToId" WHERE "mat" LIKE ${mat} `
 
     res.json({ user: user })
   } catch (e) {
