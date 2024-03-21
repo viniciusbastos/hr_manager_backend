@@ -4,20 +4,18 @@ import { Request, Response } from 'express'
 
 export const createUser = async (req: any, res: any, next: any) => {
   try {
-    const hash = await hashPassword(req.body.password)
+    // const hash = await hashPassword(req.body.password)
 
     const user = await prisma.user.create({
       data: {
         name: req.body.name,
-        password: hash,
         posto: req.body.posto,
         mat: req.body.mat,
-        username: req.body.username,
         email: req.body.email
       }
     })
-    const token = createJWT(user)
-    res.json({ token: token })
+    // const token = createJWT(user)
+    // res.json({ token: token })
   } catch (e: any) {
     e.type = 'input'
     next(e)
