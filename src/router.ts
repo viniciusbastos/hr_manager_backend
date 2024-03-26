@@ -3,6 +3,7 @@ import { body, validationResult } from 'express-validator'
 import { createUser, deleteUser } from './handlers/userHandlers'
 import { handleInputErrors } from './modules/middleware'
 import { deleteVacation } from './handlers/vacationHadlers'
+import { includes } from 'lodash'
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -219,6 +220,17 @@ router.get('/healthprofessional', async (req, res, next) => {
   }
 })
 
+router.get('/appointments', async (req, res, next) => {
+  try {
+    const appointment =     
+    await prisma.$queryRaw`SELECT "User".mat, "User".posto, "User"."name", "Appointment".progress, "Appointment"."Date", "Appointment"."Service", "Appointment"."Specialities", "HealthProfessionals"."Name" FROM "Appointment" INNER JOIN "User" ON "Appointment"."belongsToId" = "User".id  INNER JOIN "HealthProfessionals" ON "Appointment"."belongsToProffessionalsId" = "HealthProfessionals".id`
+
+    res.json(appointment)
+  } catch (e) {
+    next(e)
+  }
+
+})
 
 export default router
 function next(e: unknown) {
