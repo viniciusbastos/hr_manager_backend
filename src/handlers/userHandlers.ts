@@ -14,8 +14,8 @@ export const createUser = async (req: any, res: any, next: any) => {
         email: req.body.email
       }
     })
-    // const token = createJWT(user)
-    // res.json({ token: token })
+    const token = createJWT(user)
+    res.json({ token: token })
   } catch (e: any) {
     e.type = 'input'
     next(e)

@@ -210,6 +210,16 @@ router.get('/sicknote/:id', async (req, res) => {
 //   })
 // })
 
+router.get('/healthprofessional', async (req, res, next) => {
+  try {
+    const user = await prisma.healthProfessionals.findMany()
+    res.json(user)
+  } catch (e) {
+    next(e)
+  }
+})
+
+
 export default router
 function next(e: unknown) {
   throw new Error('Function not implemented.')

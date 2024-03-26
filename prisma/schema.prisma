@@ -24,6 +24,7 @@ model User {
   Vacation Vacation[]
   Sicknote Sicknote[]
   Course   Course[]
+  Appointment Appointment[]
 }
 
 model Vacation {
@@ -68,6 +69,7 @@ model Profile {
   phone  String
   cpf       String?
   serviceTime DateTime? @db.Date
+  bithDate DateTime? @db.Date
   workplace String?
   belongsTo     User     @relation(fields: [belongsToId], references: [id])
   belongsToId String     
@@ -89,8 +91,8 @@ model Course {
 
 model Bio {
   id            Int   @id @default(autoincrement())
-  InitialDate   DateTime 
-  FinalDate     DateTime 
+  InitialDate   DateTime @db.Date
+  FinalDate     DateTime @db.Date
   name          String
   progress      Boolean @default(false)
   createdAt     DateTime @default(now())
@@ -98,4 +100,27 @@ model Bio {
   Vacation      Vacation[]
   Course        Course[]
   
+}
+
+model Appointment {
+  id            Int   @id @default(autoincrement())
+  Date          DateTime @db.Date
+  Service       String
+  Specialities  String
+  progress      Boolean @default(false)
+  createdAt     DateTime @default(now())
+  belongsTo     User     @relation(fields: [belongsToId], references: [id])
+  belongsToId   String
+  belongsToProfessionals     HealthProfessionals     @relation(fields: [belongsToProffessionalsId], references: [id])
+  belongsToProffessionalsId   Int
+}
+
+model HealthProfessionals {
+  id            Int   @id @default(autoincrement())
+  Name          String
+  BirthDate     DateTime @db.Date
+  Service       String
+  Specialities  String[]
+  createdAt     DateTime @default(now())
+  Appointment   Appointment[]
 }
