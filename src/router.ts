@@ -141,7 +141,7 @@ router.get('/courses', async (req, res) => {
 router.get('/vacation/users/1', async (req, res, next) => {
   try {
     const vacation =     
-    await prisma.$queryRaw`SELECT "User".id as value, "User"."name" as label FROM "User"`
+    await prisma.$queryRaw`SELECT "User".id as value, "User".name ||  ' - ' || "User".posto as label FROM "User" ORDER BY label`
 
     res.json(vacation)
   } catch (e) {
