@@ -107,6 +107,7 @@ router.post('/vacation', handleInputErrors, async (req, res) => {
       month: parseInt(req.body.month)
     }
   })
+  return res
 })
 
 router.delete('/vacation/:id', deleteVacation)
