@@ -249,7 +249,7 @@ router.post('/appointment', handleInputErrors, async (req, res) => {
   const appointment = await prisma.appointment.create({
     data: {
       service: req.body.service,
-      Specialities: new Date(req.body.Specialities),
+      Specialities: req.body.Specialities,
       Date: new Date(req.body.Date),
       belongsToId: req.body.belongsToId,
       progress: req.body.progress

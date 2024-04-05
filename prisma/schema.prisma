@@ -111,8 +111,8 @@ model Appointment {
   createdAt     DateTime @default(now())
   belongsTo     User     @relation(fields: [belongsToId], references: [id])
   belongsToId   String
-  belongsToProfessionals     HealthProfessionals     @relation(fields: [belongsToProffessionalsId], references: [id])
-  belongsToProffessionalsId   Int
+  belongsToProfessionals     HealthProfessionals?     @relation(fields: [belongsToProffessionalsId], references: [id])
+  belongsToProffessionalsId   Int?
 }
 
 model HealthProfessionals {
