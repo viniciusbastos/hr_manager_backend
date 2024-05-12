@@ -12,6 +12,9 @@ COPY package.json .
 #Installing all the tools and dependencies in the container
 RUN npm install
 
+COPY  ./prisma /app/prisma
+
+
 RUN npx prisma generate
 
 #Copying all the application source code and files to the working directory `app`
