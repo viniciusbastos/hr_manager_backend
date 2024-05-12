@@ -1,126 +1,156 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["postgresqlExtensions", "relationJoins"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  extensions = [uuidOssp(map: "uuid-ossp")]
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [uuid_ossp(map: "uuid-ossp")]
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String?   @unique
-  mat       String?   @unique @db.Char(8)
-  posto     String?   
-  name      String 
-  password  String  
-  createdAt DateTime @default(now())
-  profile   Profile[]
-  Vacation Vacation[]
-  Sicknote Sicknote[]
-  Course   Course[]
+  id          String        @id @default(uuid())
+  mat         String?       @unique @db.Char(8)
+  name        String
+  createdAt   DateTime      @default(now())
+  posto       String?
+  email       String?       @unique
+  password    String
   Appointment Appointment[]
+  Course      Course[]
+  profile     Profile[]
+  Sicknote    Sicknote[]
+  Vacation    Vacation[]
 }
 
 model Vacation {
-  id          String    @id @default(uuid())
-  month       Int 
-  year        Int         
   period      String?
-  approved    Boolean? @default(false)
-  startAt     DateTime? 
-  finishAt    DateTime? 
-  createdAt   DateTime @default(now())
-  belongsTo   User     @relation(fields: [belongsToId], references: [id])
+  approved    Boolean?  @default(false)
+  createdAt   DateTime  @default(now())
   belongsToId String
-  bio           Bio? @relation(fields: [bioId], references: [id])
-  bioId         Int?
-  
+  finishAt    DateTime?
+  startAt     DateTime?
+  year        Int
+  month       Int
+  id          String    @id @default(uuid())
+  bioId       Int?
+  belongsTo   User      @relation(fields: [belongsToId], references: [id])
+  bio         Bio?      @relation(fields: [bioId], references: [id])
 }
 
 model Sicknote {
-  id            Int   @id @default(autoincrement())
-  InitialDate   DateTime 
-  FinalDate     DateTime 
-  Days          Int
-  Cid           String?
-  Obs           String?
-  approved      Boolean @default(false)
-  createdAt     DateTime @default(now())
-  belongsTo     User     @relation(fields: [belongsToId], references: [id])
-  belongsToId   String
-  bio           Bio? @relation(fields: [bioId], references: [id])
-  bioId         Int?
+  id          Int      @id @default(autoincrement())
+  InitialDate DateTime
+  FinalDate   DateTime
+  Days        Int
+  Cid         String?
+  Obs         String?
+  approved    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  belongsToId String
+  bioId       Int?
+  belongsTo   User     @relation(fields: [belongsToId], references: [id])
+  bio         Bio?     @relation(fields: [bioId], references: [id])
 }
 
 model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  photo  String?
-  adress String
-  neighborhood String? 
-  city   String?
-  state  String?
-  phone  String
-  cpf       String?
-  serviceTime DateTime? @db.Date
-  bithDate DateTime? @db.Date
-  workplace String?
-  belongsTo     User     @relation(fields: [belongsToId], references: [id])
-  belongsToId String     
+  id           Int       @id @default(autoincrement())
+  bio          String?
+  photo        String?
+  adress       String
+  neighborhood String?
+  city         String?
+  phone        String
+  state        String?
+  cpf          String?
+  serviceTime  DateTime? @db.Date
+  workplace    String?
+  belongsToId  String
+  bithDate     DateTime? @db.Date
+  belongsTo    User      @relation(fields: [belongsToId], references: [id])
 }
 
 model Course {
-  id            Int   @id @default(autoincrement())
-  InitialDate   DateTime 
-  FinalDate     DateTime 
-  name          String?
-  progress      Boolean @default(false)
-  createdAt     DateTime @default(now())
-  belongsTo     User     @relation(fields: [belongsToId], references: [id])
-  belongsToId   String
-  bio           Bio? @relation(fields: [bioId], references: [id])
-  bioId         Int?
-  
+  id          Int      @id @default(autoincrement())
+  InitialDate DateTime
+  FinalDate   DateTime
+  name        String?
+  progress    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  belongsToId String
+  bioId       Int?
+  belongsTo   User     @relation(fields: [belongsToId], references: [id])
+  bio         Bio?     @relation(fields: [bioId], references: [id])
 }
 
 model Bio {
-  id            Int   @id @default(autoincrement())
-  InitialDate   DateTime @db.Date
-  FinalDate     DateTime @db.Date
-  name          String
-  progress      Boolean @default(false)
-  createdAt     DateTime @default(now())
-  Sicknote      Sicknote[]
-  Vacation      Vacation[]
-  Course        Course[]
-  
+  id          Int        @id @default(autoincrement())
+  InitialDate DateTime   @db.Date
+  FinalDate   DateTime   @db.Date
+  name        String
+  progress    Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  Course      Course[]
+  Sicknote    Sicknote[]
+  Vacation    Vacation[]
 }
 
 model Appointment {
-  id            Int   @id @default(autoincrement())
-  Date          DateTime @db.Date
-  Service       String
-  Specialities  String
-  progress      Boolean @default(false)
-  createdAt     DateTime @default(now())
-  belongsTo     User     @relation(fields: [belongsToId], references: [id])
-  belongsToId   String
-  belongsToProfessionals     HealthProfessionals?     @relation(fields: [belongsToProffessionalsId], references: [id])
-  belongsToProffessionalsId   Int?
+  id                        Int                  @id @default(autoincrement())
+  Date                      DateTime             @db.Date
+  Service                   String
+  progress                  Boolean              @default(false)
+  createdAt                 DateTime             @default(now())
+  belongsToId               String
+  belongsToProffessionalsId Int?
+  Specialities              String
+  belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
+  belongsToProfessionals    HealthProfessionals? @relation(fields: [belongsToProffessionalsId], references: [id])
 }
 
 model HealthProfessionals {
-  id            Int   @id @default(autoincrement())
-  Name          String
-  BirthDate     DateTime @db.Date
-  Service       String
-  Specialities  String[]
-  createdAt     DateTime @default(now())
-  Appointment   Appointment[]
+  id           Int           @id @default(autoincrement())
+  Service      String
+  createdAt    DateTime      @default(now())
+  Specialities String[]
+  BirthDate    DateTime      @db.Date
+  Name         String
+  Appointment  Appointment[]
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model book {
+  id          Int                  @id @default(autoincrement())
+  title       String?
+  authors     String?
+  cover_image String?
+  note        String?
+  state       Int?
+  source      Int?
+  raw         String?
+  json        String?
+  clipping clipping[]
+
+  @@ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model clipping {
+  id             Int                  @id @default(autoincrement())
+  book_id        Int                 
+  start_location BigInt?
+  length         BigInt?
+  date           BigInt?
+  modified_date  String?
+  content        String?
+  type           String?
+  state          BigInt?
+  source         BigInt?
+  raw            String?
+  belongsTo      book                 @relation(fields: [book_id], references: [id])
+
+   @@ignore
+
+  
 }
