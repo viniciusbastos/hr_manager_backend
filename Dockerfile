@@ -1,7 +1,7 @@
 FROM node:21-alpine as builder
 
 # It installs the nodemon package globally for monitoring and watching the backend Express server
-RUN npm install -g nodemon
+#RUN npm install -g nodemon
 
 # Creating the working directory named `app`
 WORKDIR /app
