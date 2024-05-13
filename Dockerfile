@@ -1,4 +1,4 @@
-FROM node:21-alpine
+FROM node:21-alpine as builder
 
 # It installs the nodemon package globally for monitoring and watching the backend Express server
 RUN npm install -g nodemon
@@ -7,25 +7,30 @@ RUN npm install -g nodemon
 WORKDIR /app
 
 # Copying all the tools and dependencies in the package.json file to the working directory `app`
-COPY package.json .
+COPY package*.json ./
+COPY  prisma ./prisma/
+
 
 #Installing all the tools and dependencies in the container
 RUN npm install
 
-COPY  ./prisma /app/prisma
-
-
-RUN npx prisma generate
 
 #Copying all the application source code and files to the working directory `app`
 COPY . .
 
+
 RUN npm run build
 
 
-EXPOSE 3000
+FROM node:21-alpine
 
-CMD ["npm" "run" "start"]
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/dist ./dist
+
+EXPOSE 3000
+# or during execution ❓
+CMD [ "npm", "run", "start" ]
 
 
 
