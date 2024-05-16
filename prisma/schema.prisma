@@ -10,18 +10,19 @@ datasource db {
 }
 
 model User {
-  id          String        @id @default(uuid())
-  mat         String?       @unique @db.Char(8)
-  name        String
-  createdAt   DateTime      @default(now())
-  posto       String?
-  email       String?       @unique
-  password    String
-  Appointment Appointment[]
-  Course      Course[]
-  profile     Profile[]
-  Sicknote    Sicknote[]
-  Vacation    Vacation[]
+  id              String        @id @default(uuid())
+  mat             String?       @unique @db.Char(8)
+  name            String
+  createdAt       DateTime      @default(now())
+  posto           String?
+  email           String?       @unique
+  password        String?
+  Appointment     Appointment[]
+  Course          Course[]
+  profile         Profile[]
+  Sicknote        Sicknote[]
+  Vacation        Vacation[]
+  Profileunidade  Profileunidade[]
 }
 
 model Vacation {
@@ -119,38 +120,22 @@ model HealthProfessionals {
   Appointment  Appointment[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model book {
-  id          Int                  @id @default(autoincrement())
-  title       String?
-  authors     String?
-  cover_image String?
-  note        String?
-  state       Int?
-  source      Int?
-  raw         String?
-  json        String?
-  clipping clipping[]
-
-  @@ignore
+model Unidades {
+  id              Int           @id @default(autoincrement())
+  name            String?
+  location        String? 
+  cidades         String[]
+  aisp            String[]
+  risp            String? 
+  Profileunidade  Profileunidade[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
-model clipping {
-  id             Int                  @id @default(autoincrement())
-  book_id        Int                 
-  start_location BigInt?
-  length         BigInt?
-  date           BigInt?
-  modified_date  String?
-  content        String?
-  type           String?
-  state          BigInt?
-  source         BigInt?
-  raw            String?
-  belongsTo      book                 @relation(fields: [book_id], references: [id])
+model Profileunidade {
+  id           Int           @id @default(autoincrement())
+  belongsToId               String
+  belongsToUnidadeId        Int
+  belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
+  belongsToUnidade          Unidades             @relation(fields: [belongsToUnidadeId], references: [id])
 
-   @@ignore
-
-  
 }
+

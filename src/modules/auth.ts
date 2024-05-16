@@ -11,7 +11,7 @@ export const hashPassword = (password: any) => {
 
 export const createJWT = (user: { id: any; email: any }) => {
   let sec: string = process.env.JWT_SECRET as string
-
+  
   const token = jwt.sign(
     {
       id: user.id,

@@ -13,11 +13,8 @@ const router = Router()
  */
 router.get('/user', async (req, res, next) => {
   try {
-    const user = await prisma.user.findMany({
-      orderBy: {
-        createdAt: 'asc'
-      }
-    })
+    const idUnidade = 1
+    const user = await prisma.$queryRaw`SELECT "User".id, "User".mat, "User"."name", "User".posto, "Unidades"."name" as unidade, "Unidades".id as idUnidade FROM "User" INNER JOIN "Profileunidade" ON "Profileunidade"."belongsToId" = "User".id  INNER JOIN "Unidades" ON "Unidades".id = "Profileunidade"."belongsToUnidadeId"  WHERE "Unidades".id = ${idUnidade} ORDER BY "User"."createdAt"`
     res.json(user)
   } catch (e) {
     next(e)
@@ -119,7 +116,7 @@ router.delete('/vacation/:id', deleteVacation)
 
 router.get('/efetivo', async (req, res) => {
   const user =
-    await prisma.$queryRaw`SELECT "User".posto, COUNT(*)::int as qtd FROM "User" GROUP BY "User".posto`
+    await prisma.$queryRaw` SELECT "User".posto, COUNT(*)::int as qtd FROM "User" INNER JOIN "Profileunidade" ON "Profileunidade"."belongsToId" = "User".id  WHERE "Profileunidade"."belongsToUnidadeId" = 1 GROUP BY "User".posto`
 
   res.json(user)
 })

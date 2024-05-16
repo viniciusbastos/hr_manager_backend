@@ -33,17 +33,10 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(cors())
 
-app.post('/user', createUser)
-app.post('/signin', signin)
-app.get('/', async (req, res) => {
-  const user = await prisma.user.findMany({
-    include: {
-      Vacation: true,
-      profile: true
-    }
-  })
-  res.json(user)
-})
+app.post('/api/user', createUser)
+app.post('/api/signin', signin)
+
+
 
 app.use('/api', protect, router)
 app.use((err: any, req: any, res: any, next: any) => {
