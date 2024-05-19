@@ -1,118 +1,14 @@
 import { Router } from 'express'
-import { body, validationResult } from 'express-validator'
-import { createUser, deleteUser } from './handlers/userHandlers'
+import { body } from 'express-validator'
 import { handleInputErrors } from './modules/middleware'
 import { deleteVacation } from './handlers/vacationHadlers'
-import { includes } from 'lodash'
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const router = Router()
-/**
- * Product
- */
-router.get('/user', async (req, res, next) => {
-  try {
-    const idUnidade = 1
-    const user = await prisma.$queryRaw`SELECT "User".id, "User".mat, "User"."name", "User".posto, "Unidades"."name" as unidade, "Unidades".id as idUnidade FROM "User" INNER JOIN "Profileunidade" ON "Profileunidade"."belongsToId" = "User".id  INNER JOIN "Unidades" ON "Unidades".id = "Profileunidade"."belongsToUnidadeId"  WHERE "Unidades".id = ${idUnidade} ORDER BY "User"."createdAt"`
-    res.json(user)
-  } catch (e) {
-    next(e)
-  }
-})
 
-router.get('/user/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params
-    const user: any = await prisma.user.findUnique({
-      where: {
-        id: id
-      },
-      include: {
-        Vacation: true,
-        profile: true
-      }
-    })
-    res.json({ user: user })
-  } catch (e) {
-    next(e)
-  }
-})
 
-router.get('/user/search/:mat', async (req, res, next) => {
-  try {
-    const { mat } = req.params
-    const user: any =
-      await prisma.$queryRaw`SELECT "User".id, "User"."name", "User".posto, "User".mat FROM "User" WHERE "mat" LIKE ${mat} `
 
-    res.json({ user: user })
-  } catch (e) {
-    next(e)
-  }
-})
-router.post('/user', body('name').isString(), handleInputErrors, createUser)
-
-router.put('/user/:id', (req, res) => {})
-
-router.delete('/user/:id', deleteUser)
-
-/**
- * Update
- */
-
-router.get('/vacation', async (req, res) => {
-  const vacation: any = await prisma.vacation.findMany({
-    orderBy: {
-      month: 'asc'
-    }
-  })
-  res.json({ vacation })
-})
-
-router.get('/vacation/:id', async (req, res) => {
-  const { id } = req.params
-  const vacation: any = await prisma.vacation.findMany({
-    where: {
-      belongsToId: id
-    }
-  })
-  res.json({ vacation })
-})
-router.get('/vacation/month/:month', async (req, res) => {
-  const { month } = req.params
-  const intMonth = parseInt(month)
-  const vacation: any =
-    await prisma.$queryRaw`SELECT "User".id, "User"."name", "User".posto, "User".mat, "Vacation"."month","Vacation"."year", "Vacation"."period", "Vacation"."startAt", "Vacation"."finishAt" FROM "User" INNER join "Vacation" ON "User".id = "Vacation"."belongsToId" WHERE "Vacation"."month" = ${intMonth} ORDER BY "User".posto asc  `
-  res.json({ vacation })
-})
-
-router.get('/vacation/quantity', async (req, res) => {
-  const vacation: any =
-    await prisma.$queryRaw`SELECT  COUNT(*) FROM "Vacation" WHERE "Vacation"."month" =  date_part('month', (SELECT current_timestamp)) aND  "Vacation"."year" =   date_part('year', (SELECT current_timestamp))  GROUP BY "Vacation"."month"`
-
-  res.json({ vacation })
-})
-
-router.post('/vacation', handleInputErrors, async (req, res) => {
-  const vacation = await prisma.vacation.create({
-    data: {
-      period: req.body.period,
-      finishAt: new Date(req.body.finishAt),
-      startAt: new Date(req.body.startAt),
-      belongsToId: req.body.belongsToId,
-      year: parseInt(req.body.year),
-      month: parseInt(req.body.month)
-    }
-  })
-  return res.sendStatus(200)
-  
-})
-
-router.delete('/vacation/:id', deleteVacation)
-
-/**
- * UpdatePoint
- */
 
 router.get('/efetivo', async (req, res) => {
   const user =
@@ -137,17 +33,7 @@ router.get('/courses', async (req, res) => {
   const courses: any = await prisma.course.findMany({})
   res.json({ courses })
 })
-router.get('/vacation/users/1', async (req, res, next) => {
-  try {
-    const vacation =     
-    await prisma.$queryRaw`SELECT "User".id as value, "User".name ||  ' - ' || "User".posto as label FROM "User" ORDER BY label`
 
-    res.json(vacation)
-  } catch (e) {
-    next(e)
-  }
-
-})
 router.get('/courses/:id', async (req, res) => {
   const { id } = req.params
   const courses: any = await prisma.course.findMany({

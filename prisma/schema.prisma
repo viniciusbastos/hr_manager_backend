@@ -17,6 +17,7 @@ model User {
   posto           String?
   email           String?       @unique
   password        String?
+  role            Role        @default(USER)
   Appointment     Appointment[]
   Course          Course[]
   profile         Profile[]
@@ -35,7 +36,7 @@ model Vacation {
   year        Int
   month       Int
   id          String    @id @default(uuid())
-  bioId       Int?
+  bioId       String?
   belongsTo   User      @relation(fields: [belongsToId], references: [id])
   bio         Bio?      @relation(fields: [bioId], references: [id])
 }
@@ -44,13 +45,15 @@ model Sicknote {
   id          Int      @id @default(autoincrement())
   InitialDate DateTime
   FinalDate   DateTime
-  Days        Int
+  Days        Int?
+  year        Int?
+  month       Int?
   Cid         String?
   Obs         String?
   approved    Boolean  @default(false)
   createdAt   DateTime @default(now())
   belongsToId String
-  bioId       Int?
+  bioId       String?
   belongsTo   User     @relation(fields: [belongsToId], references: [id])
   bio         Bio?     @relation(fields: [bioId], references: [id])
 }
@@ -80,18 +83,22 @@ model Course {
   progress    Boolean  @default(false)
   createdAt   DateTime @default(now())
   belongsToId String
-  bioId       Int?
+  bioId       String?
   belongsTo   User     @relation(fields: [belongsToId], references: [id])
   bio         Bio?     @relation(fields: [bioId], references: [id])
 }
 
 model Bio {
-  id          Int        @id @default(autoincrement())
+  id          String        @id @default(uuid())
+  Number      Int?
+  Year        Int?
+  Month       Int?
   InitialDate DateTime   @db.Date
   FinalDate   DateTime   @db.Date
   name        String
   progress    Boolean    @default(false)
   createdAt   DateTime   @default(now())
+  type        String?
   Course      Course[]
   Sicknote    Sicknote[]
   Vacation    Vacation[]
@@ -137,5 +144,11 @@ model Profileunidade {
   belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
   belongsToUnidade          Unidades             @relation(fields: [belongsToUnidadeId], references: [id])
 
+}
+
+enum Role {
+  USER
+  ADMIN
+  GUEST
 }
 

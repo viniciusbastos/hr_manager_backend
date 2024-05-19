@@ -26,6 +26,9 @@ import cors from 'cors'
 import morgan from 'morgan'
 import { protect } from './modules/auth'
 import { createUser, signin } from './handlers/userHandlers'
+import usersRouter from './routes/users.routes'
+import vacationRouter from './routes/vacation.routes'
+
 
 app.use(morgan('dev'))
 app.use(express.json())
@@ -36,9 +39,11 @@ app.use(cors())
 app.post('/api/user', createUser)
 app.post('/api/signin', signin)
 
-
-
 app.use('/api', protect, router)
+app.use('/api', protect, usersRouter)
+app.use('/api', protect, vacationRouter)
+
+
 app.use((err: any, req: any, res: any, next: any) => {
   if (err.type === 'auth') {
     res.status(401).json({ message: `unauthorized` })
