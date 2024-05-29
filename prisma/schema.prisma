@@ -24,6 +24,7 @@ model User {
   Sicknote        Sicknote[]
   Vacation        Vacation[]
   Profileunidade  Profileunidade[]
+  AuditLog        AuditLog[]
 }
 
 model Vacation {
@@ -144,6 +145,18 @@ model Profileunidade {
   belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
   belongsToUnidade          Unidades             @relation(fields: [belongsToUnidadeId], references: [id])
 
+}
+
+model AuditLog {
+  id                       Int       @id @default(autoincrement())
+  action                   String
+  model                    String
+  modelId                  Int
+  belongsToId              String
+  ipAdress                 String
+  createdAt                DateTime  @default(now())
+
+  belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
 }
 
 enum Role {

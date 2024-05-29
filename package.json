@@ -16,14 +16,17 @@
     "test": "echo erro",
     "dev": "nodemon  src/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/index.js"
+    "start": "nodemon dist/index.js"
   },
   "prisma": {
     "seed": ""
   },
   "dependencies": {
+    "@google/generative-ai": "^0.11.4",
     "@material-tailwind/react": "^2.1.8",
+    "@pinecone-database/pinecone": "^2.2.1",
     "@prisma/client": "^5.11.0",
+    "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -32,6 +35,9 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "lodash.merge": "^4.6.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "pdf-parse": "^1.1.1",
+    "pinecone-client": "^2.0.0"
   }
 }

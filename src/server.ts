@@ -28,21 +28,49 @@ import { protect } from './modules/auth'
 import { createUser, signin } from './handlers/userHandlers'
 import usersRouter from './routes/users.routes'
 import vacationRouter from './routes/vacation.routes'
+import sicknoteRouter from './routes/sicknote.routes'
+import adminMiddleware from './middleware/admins.middleware'
+import { GoogleGenerativeAI } from '@google/generative-ai'
+import { auditLog } from './middleware/auditlog.middleware'
+
+
+
+const genAi = new GoogleGenerativeAI(process.env.GEMINI_API)
+
+
 
 
 app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.use(cors())
+// 👇️ specify origins to allow
+const whitelist = ['http://localhost:3000', 'http://localhost:4173'];
+
+// ✅ Enable pre-flight requests
+app.options('*', cors());
+
+const corsOptions = {
+  credentials: true,
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+console.log(corsOptions)
+
+app.use(cors(corsOptions));
 
 app.post('/api/user', createUser)
 app.post('/api/signin', signin)
 
-app.use('/api', protect, router)
-app.use('/api', protect, usersRouter)
-app.use('/api', protect, vacationRouter)
-
+app.use('/api', protect, [adminMiddleware,auditLog], router)
+app.use('/api', protect,[adminMiddleware,auditLog], usersRouter)
+app.use('/api', protect,[adminMiddleware,auditLog], vacationRouter)
+app.use('/api', protect,[adminMiddleware,auditLog], sicknoteRouter)
 
 app.use((err: any, req: any, res: any, next: any) => {
   if (err.type === 'auth') {

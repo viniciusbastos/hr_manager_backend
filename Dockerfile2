@@ -1,0 +1,22 @@
+# Stage 1: Build
+FROM node:18-alpine AS build
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm install
+
+COPY . .
+
+RUN npx prisma generate
+
+# Stage 2: Run
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY --from=build /app /app
+
+EXPOSE 4000
+
+CMD ["npx", "ts-node-dev", "src/index.ts"]

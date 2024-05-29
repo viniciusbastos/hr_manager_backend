@@ -11,7 +11,7 @@ export const createUser = async (req: any, res: any, next: any) => {
         name: req.body.name,
         posto: req.body.posto,
         mat: req.body.mat,
-        email: req.body.email
+        useremail: req.body.email
       }
     })
     const token = createJWT(user)
@@ -24,9 +24,24 @@ export const createUser = async (req: any, res: any, next: any) => {
 
 export const signin = async (req: Request, res: Response) => {
   const user = await prisma.user.findUnique({
-    where: { email: req.body.email }
+    where: { email: req.body.email },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      posto: true,
+      role:true,
+      password:true
+    },
+
   })
+  console.log(user)
+  const id = req.body.id
   const useremail = req.body.email
+  const role = req.body.role
+  const name = req.body.name
+  const posto = req.body.role
+
   const isValid = await comparePasswords(req.body.password, user.password)
   if (!isValid) {
     res.status(401)
@@ -36,7 +51,7 @@ export const signin = async (req: Request, res: Response) => {
 
   const token = createJWT(user)
 
-  res.json({ token, useremail })
+  res.json({ token})
 }
 
 export const deleteUser = async (req: any, res: any) => {
