@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Copying all the tools and dependencies in the package.json file to the working directory `app`
 COPY package*.json ./
-COPY  prisma ./prisma/
+COPY  ./prisma  /app/prisma/
 
 
 #Installing all the tools and dependencies in the container
