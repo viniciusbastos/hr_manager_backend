@@ -11,6 +11,8 @@ COPY package*.json ./
 COPY  prisma ./prisma/
 
 
+RUN npx prisma generate
+
 #Installing all the tools and dependencies in the container
 RUN npm install 
 
