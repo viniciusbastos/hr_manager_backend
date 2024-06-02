@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Copying all the tools and dependencies in the package.json file to the working directory `app`
 COPY package*.json ./
-COPY  ./prisma  /app/prisma/
+COPY  prisma ./prisma/
 
 
 #Installing all the tools and dependencies in the container
@@ -31,6 +31,3 @@ COPY --from=builder /app/dist ./dist
 EXPOSE 4000
 # or during execution ❓
 CMD [ "npm", "run", "start" ]
-
-
-
