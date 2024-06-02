@@ -16,7 +16,7 @@
     "test": "echo erro",
     "dev": "nodemon  src/index.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "nodemon dist/index.js"
+    "start": "node dist/index.js"
   },
   "prisma": {
     "seed": ""
