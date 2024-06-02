@@ -12,7 +12,7 @@ COPY  prisma ./prisma/
 
 
 #Installing all the tools and dependencies in the container
-RUN npm install --production
+RUN npm install 
 
 
 #Copying all the application source code and files to the working directory `app`
