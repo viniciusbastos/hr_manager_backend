@@ -45,7 +45,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // 👇️ specify origins to allow
-const whitelist = ['http://localhost:3000', 'http://localhost:4173'];
+const whitelist = ['https://app.bastosdev.info', 'https://6cipm-hrmanager.netlify.app'];
 
 // ✅ Enable pre-flight requests
 app.options('*', cors());
