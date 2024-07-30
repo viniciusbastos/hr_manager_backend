@@ -9,9 +9,9 @@ const sicknoteRouter = Router()
 //Atestados Médicos
 
 sicknoteRouter.get('/sicknote', async (req, res) => {
-    const sicknotes: any = await prisma.sicknote.findMany({
+    const sicknotes: any = await prisma.user.findMany({
       include: {
-        user: true
+        sicknote: true
       }
     })
     res.json({ sicknotes })
