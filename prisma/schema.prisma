@@ -25,6 +25,8 @@ model User {
   Vacation        Vacation[]
   Profileunidade  Profileunidade[]
   AuditLog        AuditLog[]
+  ProfileWeapons   ProfileWeapons[]
+
 }
 
 model Vacation {
@@ -165,3 +167,23 @@ enum Role {
   GUEST
 }
 
+model Weapons {
+  id              Int           @id @default(autoincrement())
+  model           String?
+  type            String?
+  serialNumber    String?
+  location        String? 
+  ProfileWeapons   ProfileWeapons[]
+}
+
+
+model ProfileWeapons {
+  id                        Int                  @id @default(autoincrement())
+  belongsToId               String
+  belongsToWeaponsId        Int
+  InitialDate               DateTime             @db.Date
+  valid                     Boolean              @default(false)
+  belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
+  belongsToWeapons          Weapons              @relation(fields: [belongsToWeaponsId], references: [id])
+
+}

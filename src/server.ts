@@ -29,6 +29,7 @@ import { createUser, signin } from './handlers/userHandlers'
 import usersRouter from './routes/users.routes'
 import vacationRouter from './routes/vacation.routes'
 import sicknoteRouter from './routes/sicknote.routes'
+import weaponsRouter from './routes/weapons.routes'
 import adminMiddleware from './middleware/admins.middleware'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { auditLog } from './middleware/auditlog.middleware'
@@ -71,6 +72,7 @@ app.use('/api', protect, [adminMiddleware,auditLog], router)
 app.use('/api', protect,[adminMiddleware,auditLog], usersRouter)
 app.use('/api', protect,[adminMiddleware,auditLog], vacationRouter)
 app.use('/api', protect,[adminMiddleware,auditLog], sicknoteRouter)
+app.use('/api', protect,[adminMiddleware,auditLog], weaponsRouter)
 
 app.use((err: any, req: any, res: any, next: any) => {
   if (err.type === 'auth') {
