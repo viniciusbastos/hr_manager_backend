@@ -9,11 +9,9 @@ const sicknoteRouter = Router()
 //Atestados Médicos
 
 sicknoteRouter.get('/sicknote', async (req, res) => {
-    const sicknotes: any = await prisma.user.findMany({
-      include: {
-        Sicknote: true
-      }
-    })
+    const sicknotes: any = 
+    await prisma.$queryRaw`SELECT * FROM "User" INNER JOIN "Sicknote" ON "Sicknote"."belongsToId" = "User"."id"`
+    
     res.json({ sicknotes })
   })
   
