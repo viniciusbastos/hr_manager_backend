@@ -11,7 +11,7 @@ const sicknoteRouter = Router()
 sicknoteRouter.get('/sicknote', async (req, res) => {
     const sicknotes: any = await prisma.user.findMany({
       include: {
-        sicknote: true
+        Sicknote: true
       }
     })
     res.json({ sicknotes })
