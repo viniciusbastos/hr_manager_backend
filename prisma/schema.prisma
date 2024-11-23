@@ -47,13 +47,10 @@ model Vacation {
 model Sicknote {
   id          Int      @id @default(autoincrement())
   InitialDate DateTime
-  FinalDate   DateTime
   Days        Int?
-  year        Int?
-  month       Int?
   Cid         String?
+  DoctorName  String?
   Obs         String?
-  approved    Boolean  @default(false)
   createdAt   DateTime @default(now())
   belongsToId String
   bioId       String?
@@ -173,6 +170,7 @@ model Weapons {
   type            String?
   serialNumber    String?
   location        String? 
+  createdAt       DateTime  @default(now())
   ProfileWeapons   ProfileWeapons[]
 }
 
@@ -183,6 +181,7 @@ model ProfileWeapons {
   belongsToWeaponsId        Int
   InitialDate               DateTime             @db.Date
   valid                     Boolean              @default(false)
+  createdAt                 DateTime             @default(now())
   belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
   belongsToWeapons          Weapons              @relation(fields: [belongsToWeaponsId], references: [id])
 

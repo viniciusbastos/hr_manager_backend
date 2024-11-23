@@ -10,7 +10,11 @@ const sicknoteRouter = Router()
 
 sicknoteRouter.get('/sicknote', async (req, res) => {
     const sicknotes: any = 
-    await prisma.$queryRaw`SELECT * FROM "User" INNER JOIN "Sicknote" ON "Sicknote"."belongsToId" = "User"."id"`
+    await prisma.$queryRaw`SELECT "User"."mat", "User"."name", "User"."posto", "Sicknote"."InitialDate", 
+    ("Sicknote"."InitialDate" + ("Sicknote"."Days" || ' days')::interval) as FinalDate, 
+    "Sicknote"."Days","Sicknote"."Cid", "Sicknote"."id","Sicknote"."createdAt"
+FROM "User" 
+INNER JOIN "Sicknote" ON "Sicknote"."belongsToId" = "User"."id"`
     
     res.json({ sicknotes })
   })
@@ -34,7 +38,7 @@ sicknoteRouter.get('/sicknote', async (req, res) => {
     const { month } = req.params
     const intMonth = parseInt(month)
     const sicknote: any =
-      await prisma.$queryRaw`SELECT "User".id, "User"."name", "User".posto, "User".mat, "Sicknote"."InitialDate","Sicknote"."FinalDate" FROM "User" INNER join "Sicknote" ON "User".id = "Sicknote"."belongsToId" WHERE "Sicknote"."month" =  ${intMonth}`
+      await prisma.$queryRaw`SELECT "User".id, "User"."name", "User".posto, "User".mat, "Sicknote"."InitialDate",("Sicknote"."InitialDate" + ("Sicknote"."Days" || ' days')::interval) as FinalDate, "Sicknote". FROM "User" INNER join "Sicknote" ON "User".id = "Sicknote"."belongsToId" WHERE "Sicknote"."month" =  ${intMonth}`
     res.json({ sicknote })
     }
     catch (e) {
@@ -57,14 +61,28 @@ sicknoteRouter.get('/sicknote', async (req, res) => {
   sicknoteRouter.post('/sicknote', async (req, res) => {
     const sicknote = await prisma.sicknote.create({
       data: {
-        period: req.body.period,
-        finishAt: new Date(req.body.finishAt),
-        startAt: new Date(req.body.startAt),
+        Days: parseInt(req.body.Days),
+        InitialDate: new Date(req.body.InitialDate),
         belongsToId: req.body.belongsToId,
-        year: parseInt(req.body.year),
-        month: parseInt(req.body.month)
+        Cid: req.body.Cid,
+        DoctorName: req.body.DoctorName,
       }
     })
+    return res.sendStatus(200)
+  })
+  sicknoteRouter.delete('/sicknote/:id', async (req, res) => {
+    try{
+      const { id } = req.params
+      const deleted = await prisma.sicknote.delete({
+        where: {
+          id: parseInt(id)
+        }
+      })
+    
+      res.json({ data: deleted })
+  } catch(e){
+     
+  }
   })
 
   export default sicknoteRouter
