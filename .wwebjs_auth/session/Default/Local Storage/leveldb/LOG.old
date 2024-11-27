@@ -1,0 +1,6 @@
+2024/11/27-07:25:26.091 b303 Reusing MANIFEST /Users/viniciusbastos/Documents/code/hr_manager_backend/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
+2024/11/27-07:25:26.091 b303 Recovering log #7
+2024/11/27-07:25:26.093 b303 Reusing old log /Users/viniciusbastos/Documents/code/hr_manager_backend/.wwebjs_auth/session/Default/Local Storage/leveldb/000007.log 
+2024/11/27-07:26:27.833 1f203 Level-0 table #11: started
+2024/11/27-07:26:27.839 1f203 Level-0 table #11: 14031 bytes OK
+2024/11/27-07:26:27.849 1f203 Delete type=0 #7

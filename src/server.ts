@@ -1,5 +1,6 @@
 import express from 'express'
 import router from './router'
+
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient({
   log: [
@@ -34,6 +35,10 @@ import adminMiddleware from './middleware/admins.middleware'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { auditLog } from './middleware/auditlog.middleware'
 import uploadRouter from './testes3'
+import whatsappRouter from './routes/whatsapp.routes'
+
+
+
 
 
 
@@ -75,6 +80,7 @@ app.use('/api', protect,[adminMiddleware,auditLog], vacationRouter)
 app.use('/api', protect,[adminMiddleware,auditLog], sicknoteRouter)
 app.use('/api', protect,[adminMiddleware,auditLog], weaponsRouter)
 app.use('/api', uploadRouter)
+app.use('/api', whatsappRouter)
 
 
 app.use((err: any, req: any, res: any, next: any) => {

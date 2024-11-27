@@ -167,9 +167,11 @@ enum Role {
 model Weapons {
   id              Int           @id @default(autoincrement())
   model           String?
-  type            String?
+  type            Int?
   serialNumber    String?
-  location        String? 
+  location        Int?
+  status          Int?
+  caliber         Int?
   createdAt       DateTime  @default(now())
   ProfileWeapons   ProfileWeapons[]
 }
@@ -196,4 +198,71 @@ model UploadedFile {
   s3Key        String   // S3 object key
   s3Bucket     String   // S3 bucket name
   uploadedAt   DateTime @default(now())
+}
+
+model WeaponType {
+  id           Int      @id @default(autoincrement())
+  type         String   // Generated unique filename
+  createdAt    DateTime  @default(now())
+
+}
+
+model WeaponLocation {
+  id           Int      @id @default(autoincrement())
+  location     String   // Generated unique filename
+  createdAt    DateTime  @default(now())
+
+}
+
+model WeaponStatus {
+  id           Int      @id @default(autoincrement())
+  Status       Status    @default(EM_CONDICOES_DE_USO) // Generated unique filename
+  createdAt    DateTime  @default(now())
+
+}
+
+enum Status {
+  EM_CONDICOES_DE_USO
+  DEFEITO
+  EM_MANUTENCAO
+  INSERVIVEL
+  DESTRUIDO
+  DEVOLVIDO_AO_DAL
+  EM_USO
+  EM_REPARO
+  EM_TRANSPORTE
+  EM_ARMAZENAMENTO__NO_PAIOL
+  EM_TESTE_DE_MANUTENCAO
+  EM_INSTRUCAO
+  NAO_LOCALIZADA
+  EM_PERICIA
+  A_DISPOSICAO_DA_JUSTICA
+
+
+}
+
+model WeaponCaliber {
+  id           Int      @id @default(autoincrement())
+  Caliber      Caliber    @default(CALIBRE_40) // Generated unique filename
+  createdAt    DateTime  @default(now())
+
+}
+
+enum Caliber {
+  CALIBRE_9MM
+  CALIBRE_45
+  CALIBRE_40
+  CALIBRE_357
+  CALIBRE_38
+  CALIBRE_380
+  CALIBRE_9
+  CALIBRE_762
+  CALIBRE_556
+  CALIBRE_765
+  CALIBRE_50
+  CALIBRE_22
+  CALIBRE_223
+  CALIBRE_30
+  CALIBRE_20
+  CALIBRE_12
 }

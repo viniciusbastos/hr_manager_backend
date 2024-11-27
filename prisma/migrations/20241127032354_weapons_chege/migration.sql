@@ -1,0 +1,27 @@
+-- CreateEnum
+CREATE TYPE "Status" AS ENUM ('OPERACIONAL', 'DEFEITO', 'MANUTENCAO', 'INSERVIVEL');
+
+-- CreateEnum
+CREATE TYPE "Caliber" AS ENUM ('CALIBRE_9MM', 'CALIBRE_45', 'CALIBRE_40', 'CALIBRE_357', 'CALIBRE_38', 'CALIBRE_380', 'CALIBRE_9', 'CALIBRE_762', 'CALIBRE_50', 'CALIBRE_22', 'CALIBRE_223', 'CALIBRE_30', 'CALIBRE_20', 'CALIBRE_12');
+
+-- AlterTable
+ALTER TABLE "Weapons" ADD COLUMN     "caliber" TEXT,
+ADD COLUMN     "status" TEXT;
+
+-- CreateTable
+CREATE TABLE "WeaponStatus" (
+    "id" SERIAL NOT NULL,
+    "Status" "Status" NOT NULL DEFAULT 'OPERACIONAL',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "WeaponStatus_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "WeaponCaliber" (
+    "id" SERIAL NOT NULL,
+    "Caliber" "Caliber" NOT NULL DEFAULT 'CALIBRE_40',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "WeaponCaliber_pkey" PRIMARY KEY ("id")
+);

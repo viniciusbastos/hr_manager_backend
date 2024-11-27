@@ -30,6 +30,21 @@ weaponsRouter.get('/weapons/fixed', async (req, res) => {
 
   res.json( weapons )
 })
+weaponsRouter.get('/weapons/info', async (req, res) => {
+  
+  const weapons: any =  await prisma.$queryRaw`
+  SELECT "Weapons".id, "Weapons".model, "Weapons"."serialNumber", "WeaponType"."type", "WeaponStatus"."Status", "WeaponCaliber"."Caliber", "WeaponLocation"."location" FROM "Weapons" 
+INNER JOIN "WeaponType" ON "WeaponType"."id" = "Weapons"."type" 
+INNER JOIN "WeaponStatus" ON "WeaponStatus"."id" = "Weapons"."status" 
+INNER JOIN "WeaponCaliber" ON "WeaponCaliber"."id" = "Weapons"."caliber" 
+INNER JOIN "WeaponLocation" ON "WeaponLocation"."id" = "Weapons"."location" 
+
+
+ `
+
+  res.json( weapons )
+})
+
 weaponsRouter.get('/weaponprofile/:id', async (req, res) => {
   const id = parseInt(req.params.id)
   const weapons: any =  
