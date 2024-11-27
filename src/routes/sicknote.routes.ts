@@ -10,11 +10,20 @@ const sicknoteRouter = Router()
 
 sicknoteRouter.get('/sicknote', async (req, res) => {
     const sicknotes: any = 
-    await prisma.$queryRaw`SELECT "User"."mat", "User"."name", "User"."posto", "Sicknote"."InitialDate", 
-    ("Sicknote"."InitialDate" + ("Sicknote"."Days" || ' days')::interval) as FinalDate, 
-    "Sicknote"."Days","Sicknote"."Cid", "Sicknote"."id","Sicknote"."createdAt"
-FROM "User" 
-INNER JOIN "Sicknote" ON "Sicknote"."belongsToId" = "User"."id"`
+    await prisma.$queryRaw`
+    SELECT 
+    "User"."mat", 
+    "User"."name", 
+    "User"."posto", 
+    "Sicknote"."InitialDate", 
+    "Sicknote"."InitialDate" + ("Sicknote"."Days" - 1) * INTERVAL '1 day' AS FinalDate, 
+    "Sicknote"."Days",
+    "Sicknote"."Cid", 
+    "Sicknote"."id",
+    "Sicknote"."createdAt"
+    FROM "User" 
+    INNER JOIN "Sicknote" ON "Sicknote"."belongsToId" = "User"."id" 
+    ORDER BY FinalDate DESC`
     
     res.json({ sicknotes })
   })

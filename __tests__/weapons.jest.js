@@ -1,6 +1,6 @@
 const request = require('supertest');
 const express = require('express');
-const weaponsRouter = require('./weapons.routes'); // Adjust the path as needed
+const weaponsRouter = require('../src/routes/weapons.routes'); // Adjust the path as needed
 
 const app = express();
 app.use(express.json());

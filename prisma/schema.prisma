@@ -186,3 +186,14 @@ model ProfileWeapons {
   belongsToWeapons          Weapons              @relation(fields: [belongsToWeaponsId], references: [id])
 
 }
+
+model UploadedFile {
+  id           Int      @id @default(autoincrement())
+  fileName     String   // Generated unique filename
+  originalName String   // Original filename
+  mimetype     String   // MIME type of the file
+  size         Int      // File size in bytes
+  s3Key        String   // S3 object key
+  s3Bucket     String   // S3 bucket name
+  uploadedAt   DateTime @default(now())
+}
