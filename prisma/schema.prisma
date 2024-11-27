@@ -54,6 +54,7 @@ model Sicknote {
   createdAt   DateTime @default(now())
   belongsToId String
   bioId       String?
+  crm         String?
   belongsTo   User     @relation(fields: [belongsToId], references: [id])
   bio         Bio?     @relation(fields: [bioId], references: [id])
 }

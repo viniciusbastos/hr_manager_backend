@@ -74,6 +74,7 @@ sicknoteRouter.get('/sicknote', async (req, res) => {
         InitialDate: new Date(req.body.InitialDate),
         belongsToId: req.body.belongsToId,
         Cid: req.body.Cid,
+        crm: req.body.crm,
         DoctorName: req.body.DoctorName,
       }
     })
