@@ -10,10 +10,10 @@ WORKDIR /app
 COPY package*.json ./
 COPY  prisma ./prisma/
 COPY prisma ./prisma/
-COPY node_modules/.prisma ./node_modules/.prisma/
-COPY node_modules/@prisma ./node_modules/@prisma/
 
-RUN npx prisma generate
+RUN npm cache clean --force && npm install prisma@5.22.0 -D --silent && npx prisma generate
+
+# RUN npx prisma generate
 
 #Installing all the tools and dependencies in the container
 RUN npm install 
