@@ -1,15 +1,15 @@
-2024/11/27-17:32:06.157 b103 Reusing MANIFEST /Users/viniciusbastos/Documents/code/hr_manager_backend/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/11/27-17:32:06.157 b103 Recovering log #187
-2024/11/27-17:32:06.164 b103 Reusing old log /Users/viniciusbastos/Documents/code/hr_manager_backend/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000187.log 
-2024/11/27-17:32:08.238 9e03 Level-0 table #193: started
-2024/11/27-17:32:08.244 9e03 Level-0 table #193: 116633 bytes OK
-2024/11/27-17:32:08.253 9e03 Delete type=0 #187
-2024/11/27-17:32:08.253 9e03 Manual compaction at level-0 from '\x007\x00\x00\x00' @ 72057594037927935 : 1 .. '\x008\x00\x00\x00' @ 0 : 0; will stop at (end)
-2024/11/27-17:32:08.330 b103 Compacting 1@1 + 2@2 files
-2024/11/27-17:32:08.370 b103 Generated table #194@1: 60153 keys, 2220441 bytes
-2024/11/27-17:32:08.379 b103 Generated table #195@1: 7036 keys, 302775 bytes
-2024/11/27-17:32:08.379 b103 Compacted 1@1 + 2@2 files => 2523216 bytes
-2024/11/27-17:32:08.387 b103 compacted to: files[ 0 0 2 0 0 0 0 ]
-2024/11/27-17:32:08.387 b103 Delete type=2 #189
-2024/11/27-17:32:08.387 b103 Delete type=2 #190
-2024/11/27-17:32:08.387 b103 Delete type=2 #193
+2024/11/27-17:39:20.024 8603 Reusing MANIFEST /Users/viniciusbastos/Documents/code/hr_manager_backend/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/11/27-17:39:20.024 8603 Recovering log #197
+2024/11/27-17:39:20.034 8603 Reusing old log /Users/viniciusbastos/Documents/code/hr_manager_backend/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000197.log 
+2024/11/27-17:39:21.797 af03 Level-0 table #203: started
+2024/11/27-17:39:21.804 af03 Level-0 table #203: 131413 bytes OK
+2024/11/27-17:39:21.813 af03 Delete type=0 #197
+2024/11/27-17:39:21.813 af03 Manual compaction at level-0 from '\x009\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00:\x00\x00\x00' @ 0 : 0; will stop at (end)
+2024/11/27-17:39:21.878 b503 Compacting 1@1 + 2@2 files
+2024/11/27-17:39:21.923 b503 Generated table #204@1: 60985 keys, 2218774 bytes
+2024/11/27-17:39:21.932 b503 Generated table #205@1: 7323 keys, 335208 bytes
+2024/11/27-17:39:21.932 b503 Compacted 1@1 + 2@2 files => 2553982 bytes
+2024/11/27-17:39:21.940 b503 compacted to: files[ 0 0 2 0 0 0 0 ]
+2024/11/27-17:39:21.940 b503 Delete type=2 #203
+2024/11/27-17:39:21.940 b503 Delete type=2 #200
+2024/11/27-17:39:21.940 b503 Delete type=2 #199
