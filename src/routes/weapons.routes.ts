@@ -37,7 +37,8 @@ weaponsRouter.get('/weapons/info', async (req, res) => {
 INNER JOIN "WeaponType" ON "WeaponType"."id" = "Weapons"."type" 
 INNER JOIN "WeaponStatus" ON "WeaponStatus"."id" = "Weapons"."status" 
 INNER JOIN "WeaponCaliber" ON "WeaponCaliber"."id" = "Weapons"."caliber" 
-INNER JOIN "WeaponLocation" ON "WeaponLocation"."id" = "Weapons"."location"`
+INNER JOIN "WeaponLocation" ON "WeaponLocation"."id" = "Weapons"."location"
+ORDER BY "Weapons".id ASC`
 
   res.json( weapons )
 })
