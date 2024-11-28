@@ -1,15 +1,3 @@
-2024/11/27-17:47:42.214 9f03 Reusing MANIFEST /Users/viniciusbastos/Documents/code/hr_manager_backend/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
-2024/11/27-17:47:42.214 9f03 Recovering log #207
-2024/11/27-17:47:42.220 9f03 Reusing old log /Users/viniciusbastos/Documents/code/hr_manager_backend/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000207.log 
-2024/11/27-17:47:43.799 15e0b Level-0 table #213: started
-2024/11/27-17:47:43.807 15e0b Level-0 table #213: 130129 bytes OK
-2024/11/27-17:47:43.817 15e0b Delete type=0 #207
-2024/11/27-17:47:43.818 15e0b Manual compaction at level-0 from '\x00;\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00<\x00\x00\x00' @ 0 : 0; will stop at (end)
-2024/11/27-17:47:43.870 15e0b Compacting 1@1 + 2@2 files
-2024/11/27-17:47:43.914 15e0b Generated table #214@1: 61408 keys, 2218358 bytes
-2024/11/27-17:47:43.924 15e0b Generated table #215@1: 7875 keys, 361833 bytes
-2024/11/27-17:47:43.924 15e0b Compacted 1@1 + 2@2 files => 2580191 bytes
-2024/11/27-17:47:43.932 15e0b compacted to: files[ 0 0 2 0 0 0 0 ]
-2024/11/27-17:47:43.932 15e0b Delete type=2 #210
-2024/11/27-17:47:43.932 15e0b Delete type=2 #213
-2024/11/27-17:47:43.932 15e0b Delete type=2 #209
+2024/11/27-21:16:03.609 a103 Reusing MANIFEST /Users/viniciusbastos/Documents/code/hr_manager_backend/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2024/11/27-21:16:03.609 a103 Recovering log #292
+2024/11/27-21:16:03.615 a103 Reusing old log /Users/viniciusbastos/Documents/code/hr_manager_backend/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/000292.log 

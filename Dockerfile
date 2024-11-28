@@ -9,11 +9,7 @@ WORKDIR /app
 # Copying all the tools and dependencies in the package.json file to the working directory `app`
 COPY package*.json ./
 COPY  prisma ./prisma/
-COPY prisma ./prisma/
-
-RUN npm cache clean --force && npm install prisma@5.22.0 -D --silent && npx prisma generate
-
-# RUN npx prisma generate
+RUN npx prisma generate 
 
 #Installing all the tools and dependencies in the container
 RUN npm install 
