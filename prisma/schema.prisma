@@ -12,11 +12,12 @@ datasource db {
 model User {
   id              String        @id @default(uuid())
   mat             String?       @unique @db.Char(8)
-  name            String
-  createdAt       DateTime      @default(now())
+  name            String?
   posto           String?
   email           String?       @unique
   password        String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt  @default(now())
   role            Role        @default(USER)
   Appointment     Appointment[]
   Course          Course[]
@@ -32,7 +33,6 @@ model User {
 model Vacation {
   period      String?
   approved    Boolean?  @default(false)
-  createdAt   DateTime  @default(now())
   belongsToId String
   finishAt    DateTime?
   startAt     DateTime?
@@ -40,6 +40,8 @@ model Vacation {
   month       Int
   id          String    @id @default(uuid())
   bioId       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
   belongsTo   User      @relation(fields: [belongsToId], references: [id])
   bio         Bio?      @relation(fields: [bioId], references: [id])
 }
@@ -51,10 +53,11 @@ model Sicknote {
   Cid         String?
   DoctorName  String?
   Obs         String?
-  createdAt   DateTime @default(now())
   belongsToId String
   bioId       String?
   crm         String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
   belongsTo   User     @relation(fields: [belongsToId], references: [id])
   bio         Bio?     @relation(fields: [bioId], references: [id])
 }
@@ -63,16 +66,18 @@ model Profile {
   id           Int       @id @default(autoincrement())
   bio          String?
   photo        String?
-  adress       String
+  adress       String?
   neighborhood String?
   city         String?
-  phone        String
+  phone        String?
   state        String?
   cpf          String?
   serviceTime  DateTime? @db.Date
   workplace    String?
   belongsToId  String
   bithDate     DateTime? @db.Date
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt @default(now())
   belongsTo    User      @relation(fields: [belongsToId], references: [id])
 }
 
@@ -82,9 +87,10 @@ model Course {
   FinalDate   DateTime
   name        String?
   progress    Boolean  @default(false)
-  createdAt   DateTime @default(now())
   belongsToId String
   bioId       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
   belongsTo   User     @relation(fields: [belongsToId], references: [id])
   bio         Bio?     @relation(fields: [bioId], references: [id])
 }
@@ -98,7 +104,8 @@ model Bio {
   FinalDate   DateTime   @db.Date
   name        String
   progress    Boolean    @default(false)
-  createdAt   DateTime   @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
   type        String?
   Course      Course[]
   Sicknote    Sicknote[]
@@ -110,10 +117,11 @@ model Appointment {
   Date                      DateTime             @db.Date
   Service                   String
   progress                  Boolean              @default(false)
-  createdAt                 DateTime             @default(now())
   belongsToId               String
   belongsToProffessionalsId Int?
   Specialities              String
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime @updatedAt @default(now())
   belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
   belongsToProfessionals    HealthProfessionals? @relation(fields: [belongsToProffessionalsId], references: [id])
 }
@@ -121,10 +129,11 @@ model Appointment {
 model HealthProfessionals {
   id           Int           @id @default(autoincrement())
   Service      String
-  createdAt    DateTime      @default(now())
   Specialities String[]
   BirthDate    DateTime      @db.Date
   Name         String
+  createdAt    DateTime  @default(now())
+  updatedAt DateTime @updatedAt @default(now())
   Appointment  Appointment[]
 }
 
@@ -135,6 +144,8 @@ model Unidades {
   cidades         String[]
   aisp            String[]
   risp            String? 
+  createdAt    DateTime  @default(now())
+  updatedAt DateTime @updatedAt @default(now())
   Profileunidade  Profileunidade[]
 }
 
@@ -142,6 +153,8 @@ model Profileunidade {
   id           Int           @id @default(autoincrement())
   belongsToId               String
   belongsToUnidadeId        Int
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime @updatedAt @default(now())
   belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
   belongsToUnidade          Unidades             @relation(fields: [belongsToUnidadeId], references: [id])
 
@@ -155,6 +168,7 @@ model AuditLog {
   belongsToId              String
   ipAdress                 String
   createdAt                DateTime  @default(now())
+  updatedAt                DateTime @updatedAt @default(now())
 
   belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
 }
@@ -173,7 +187,8 @@ model Weapons {
   location        Int?
   status          Int?
   caliber         Int?
-  createdAt       DateTime  @default(now())
+  createdAt    DateTime  @default(now())
+  updatedAt DateTime @updatedAt @default(now())
   ProfileWeapons   ProfileWeapons[]
 }
 
@@ -183,8 +198,9 @@ model ProfileWeapons {
   belongsToId               String
   belongsToWeaponsId        Int
   InitialDate               DateTime             @db.Date
-  valid                     Boolean              @default(false)
-  createdAt                 DateTime             @default(now())
+  discharge                 Boolean              @default(false)
+  createdAt                 DateTime  @default(now())
+  updatedAt                 DateTime @updatedAt @default(now())
   belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
   belongsToWeapons          Weapons              @relation(fields: [belongsToWeaponsId], references: [id])
 
@@ -199,12 +215,15 @@ model UploadedFile {
   s3Key        String   // S3 object key
   s3Bucket     String   // S3 bucket name
   uploadedAt   DateTime @default(now())
+  createdAt    DateTime  @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 }
 
 model WeaponType {
   id           Int      @id @default(autoincrement())
   type         String   // Generated unique filename
   createdAt    DateTime  @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 
 }
 
@@ -212,6 +231,7 @@ model WeaponLocation {
   id           Int      @id @default(autoincrement())
   location     String   // Generated unique filename
   createdAt    DateTime  @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 
 }
 
@@ -219,6 +239,7 @@ model WeaponStatus {
   id           Int      @id @default(autoincrement())
   Status       Status    @default(EM_CONDICOES_DE_USO) // Generated unique filename
   createdAt    DateTime  @default(now())
+  updatedAt DateTime @updatedAt @default(now())
 
 }
 
@@ -246,6 +267,7 @@ model WeaponCaliber {
   id           Int      @id @default(autoincrement())
   Caliber      Caliber    @default(CALIBRE_40) // Generated unique filename
   createdAt    DateTime  @default(now())
+  updatedAt    DateTime @updatedAt @default(now())
 
 }
 
@@ -266,4 +288,15 @@ enum Caliber {
   CALIBRE_30
   CALIBRE_20
   CALIBRE_12
+}
+
+model Drivers {
+  id               Int      @id @default(autoincrement())
+  matricula        String   @unique// Generated unique filename
+  driverLicense    String   @unique
+  category         String  
+  licenseValidity  DateTime
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime @updatedAt @default(now())
+
 }
