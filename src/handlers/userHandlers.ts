@@ -1,7 +1,6 @@
 import { comparePasswords, createJWT, hashPassword } from './../modules/auth'
 import prisma from '../db'
 import { Request, Response } from 'express'
-import { select } from '@material-tailwind/react'
 
 export const createUser = async (req: any, res: any, next: any) => {
   try {
