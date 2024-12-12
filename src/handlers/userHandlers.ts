@@ -1,6 +1,7 @@
 import { comparePasswords, createJWT, hashPassword } from './../modules/auth'
 import prisma from '../db'
 import { Request, Response } from 'express'
+import { select } from '@material-tailwind/react'
 
 export const createUser = async (req: any, res: any, next: any) => {
   try {
@@ -16,9 +17,15 @@ export const createUser = async (req: any, res: any, next: any) => {
     })
     const token = createJWT(user)
     res.json({ token: token })
-  } catch (e: any) {
-    e.type = 'input'
-    next(e)
+  } catch (error: any) {
+    if (error.response) {
+      console.error('Server Error:', error.response.status, error.response.data)
+    } else if (error.request) {
+      console.error('No Response Error:', error.request)
+    } else {
+      console.error('Request Setup Error:', error.message)
+    }
+    next(error)
   }
 }
 
@@ -30,12 +37,16 @@ export const signin = async (req: Request, res: Response) => {
       email: true,
       name: true,
       posto: true,
-      role:true,
-      password:true
-    },
-
+      role: true,
+      password: true,
+      profile: {
+        select: {
+          phone: true
+        }
+      }
+    }
   })
-  console.log(user)
+  console.log(user.profile[0].phone)
   const id = req.body.id
   const useremail = req.body.email
   const role = req.body.role
@@ -50,8 +61,8 @@ export const signin = async (req: Request, res: Response) => {
   }
 
   const token = createJWT(user)
-
-  res.json({ token})
+  console.log(user)
+  res.json({ token })
 }
 
 export const deleteUser = async (req: any, res: any) => {

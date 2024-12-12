@@ -300,3 +300,13 @@ model Drivers {
   updatedAt        DateTime @updatedAt @default(now())
 
 }
+
+model VacationPlan {
+  id          Int      @id @default(autoincrement())
+  mat         String?
+  optionOne   Int?
+  optionTwo   Int?
+  phone       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime @updatedAt @default(now())
+}

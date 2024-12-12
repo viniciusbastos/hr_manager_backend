@@ -7,8 +7,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const usersRouter = Router()
 
-
-usersRouter.get('/user', showUsers )
+usersRouter.get('/user', showUsers)
 
 usersRouter.get('/user/:id', showUser)
 
@@ -23,10 +22,10 @@ usersRouter.get('/user/search/:mat', async (req, res, next) => {
     next(e)
   }
 })
-usersRouter.post('/user', body('name').isString(), handleInputErrors, createUser)
+usersRouter.post('/user', handleInputErrors, createUser)
 
 usersRouter.put('/user/:id', (req, res) => {})
 
 usersRouter.delete('/user/:id', deleteUser)
 
-export default usersRouter;
+export default usersRouter

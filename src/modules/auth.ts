@@ -9,17 +9,24 @@ export const hashPassword = (password: any) => {
   return bcrypt.hash(password, 5)
 }
 
-export const createJWT = (user: { id: any; email: any, role: string, name: string, posto: string }) => {
+export const createJWT = (user: {
+  id: any
+  email: any
+  role: string
+  name: string
+  posto: string
+  phone: string
+}) => {
   let sec: string = process.env.JWT_SECRET as string
-  
+
   const token = jwt.sign(
     {
       id: user.id,
       useremail: user.email,
       role: user.role,
       name: user.name,
-      posto: user.posto
-
+      posto: user.posto,
+      phone: user.phone
     },
     sec,
     { expiresIn: '30d' }

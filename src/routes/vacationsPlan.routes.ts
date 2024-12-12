@@ -45,15 +45,13 @@ vacationRouter.get('/vacation/quantity', async (req, res) => {
   res.json({ vacation })
 })
 
-vacationRouter.post('/vacation', handleInputErrors, async (req, res) => {
+vacationRouter.post('/vacationplan', handleInputErrors, async (req, res) => {
   const vacation = await prisma.vacation.create({
     data: {
-      period: req.body.period,
-      finishAt: new Date(req.body.finishAt),
-      startAt: new Date(req.body.startAt),
-      belongsToId: req.body.belongsToId,
-      year: parseInt(req.body.year),
-      month: parseInt(req.body.month)
+      mat: req.body.mat,
+      optionOne: req.body.optionOne,
+      optionTwo: req.body.optionTwo,
+      phone: req.body.phone
     }
   })
   return res.sendStatus(200)

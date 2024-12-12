@@ -4,19 +4,13 @@ import { body } from 'express-validator'
 import { handleInputErrors } from '../modules/middleware'
 import { deleteVacation } from '../handlers/vacationHadlers'
 import { request } from 'http'
+import { showWeapons, updateProfileWeapon } from '../controllers/weapons.controllers'
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const weaponsRouter = Router()
 
-weaponsRouter.get('/weapons', async (req, res) => {
-  const weapons: any = await prisma.weapons.findMany({
-    orderBy: {
-      serialNumber: 'asc'
-    }
-  })
-  res.json({ weapons })
-})
+weaponsRouter.get('/weapons', showWeapons)
 weaponsRouter.get('/weapons/label', async (req, res) => {
   const weapons: any = await prisma.$queryRaw`
     SELECT 
@@ -152,49 +146,7 @@ weaponsRouter.delete('/weapons/:id', async (req, res) => {
 })
 
 //Update weapon discharge and update weapon status
-weaponsRouter.put('/weaponsfixed/:id', async (req, res) => {
-  try {
-    const id = req.params
-    const weaponChargeId = parseInt(req.params.id, 10)
-    console.log(`Searching for profileWeapons with ID: ${weaponChargeId}`)
+weaponsRouter.put('/weaponsfixed/:id', updateProfileWeapon)
 
-    if (isNaN(weaponChargeId)) {
-      console.error('Invalid ID format:', id)
-      return res.status(400).json({ error: 'Invalid ID format' })
-    }
 
-    // Find the weapon to be deleted
-    console.log(`Searching for profileWeapons with ID: ${id}`)
-    const weapon = await prisma.profileWeapons.findUnique({
-      where: { id: weaponChargeId }
-    })
-    console.log(weapon)
-    if (!weapon) {
-      console.error('Weapon not found:', id)
-      return res.status(404).json({ error: 'Weapon not found' })
-    }
-
-    // Delete the weapon from profileWeapons
-    console.log(`Deleting profileWeapons with ID: ${id}`)
-    const updateProfileWeapon = await prisma.profileWeapons.update({
-      where: { id: weaponChargeId },
-      data: {
-        discharge: true
-      }
-    })
-
-    // Update the corresponding weapon in weapons table
-    console.log(`Updating weapons with ID: ${weapon.belongsToWeaponsId} to location 2`)
-    const updatedWeapon = await prisma.weapons.update({
-      where: { id: weapon.belongsToWeaponsId },
-      data: { location: 2 }
-    })
-
-    console.log('Successfully deleted profileWeapon and updated weapon')
-    res.json({ updateProfileWeapon, updatedWeapon })
-  } catch (error) {
-    console.error('Error deleting and updating weapon:', error)
-    res.status(500).json({ error: 'Internal server error' })
-  }
-})
 export default weaponsRouter
