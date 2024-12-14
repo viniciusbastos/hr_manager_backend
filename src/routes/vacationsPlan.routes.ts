@@ -30,19 +30,102 @@ vacationPlanRouter.get('/vacation/:id', async (req, res) => {
   })
   res.json({ vacation })
 })
-vacationPlanRouter.get('/vacations/month/:month', async (req, res) => {
-  const { month } = req.params
-  const intMonth = parseInt(month)
-  const vacation: any =
-    await prisma.$queryRaw`SELECT "Vacation".id, "User"."name", "User".posto, "User".mat, "Vacation"."month","Vacation"."year", "Vacation"."period", "Vacation"."startAt", "Vacation"."finishAt" FROM "User" INNER join "Vacation" ON "User".id = "Vacation"."belongsToId" WHERE "Vacation"."month" = ${intMonth}  ORDER BY "User".posto asc  `
+vacationPlanRouter.get('/vacationsplan/:phone', async (req, res) => {
+  const { phone } = req.params
+
+  const vacation: any = await prisma.$queryRaw`SELECT 
+    "VacationPlan"."id",
+    "VacationPlan"."mat",
+    "User"."posto",
+    "User"."name",
+    "VacationPlan"."phone",
+    CASE "optionOne"
+        WHEN 1 THEN 'Janeiro'
+        WHEN 2 THEN 'Fevereiro'
+        WHEN 3 THEN 'Março'
+        WHEN 4 THEN 'Abril'
+        WHEN 5 THEN 'Maio'
+        WHEN 6 THEN 'Junho'
+        WHEN 7 THEN 'Julho'
+        WHEN 8 THEN 'Agosto'
+        WHEN 9 THEN 'Setembro'
+        WHEN 10 THEN 'Outubro'
+        WHEN 11 THEN 'Novembro'
+        WHEN 12 THEN 'Dezembro'
+        ELSE 'Mês inválido' -- Caso o número não esteja entre 1 e 12
+    END AS opcaoOne,
+    CASE "optionTwo"
+        WHEN 1 THEN 'Janeiro'
+        WHEN 2 THEN 'Fevereiro'
+        WHEN 3 THEN 'Março'
+        WHEN 4 THEN 'Abril'
+        WHEN 5 THEN 'Maio'
+        WHEN 6 THEN 'Junho'
+        WHEN 7 THEN 'Julho'
+        WHEN 8 THEN 'Agosto'
+        WHEN 9 THEN 'Setembro'
+        WHEN 10 THEN 'Outubro'
+        WHEN 11 THEN 'Novembro'
+        WHEN 12 THEN 'Dezembro'
+        ELSE 'Mês inválido' -- Caso o número não esteja entre 1 e 12
+    END AS opcaoTwo
+    
+FROM 
+    "VacationPlan"
+
+INNER JOIN "User"
+ON 
+"User"."mat" = "VacationPlan"."mat" 
+WHERE "VacationPlan"."phone" = ${phone}`
   res.json(vacation)
 })
 
-vacationPlanRouter.get('/vacation/quantity', async (req, res) => {
-  const vacation: any =
-    await prisma.$queryRaw`SELECT  COUNT(*) FROM "Vacation" WHERE "Vacation"."month" =  date_part('month', (SELECT current_timestamp)) aND  "Vacation"."year" =   date_part('year', (SELECT current_timestamp))  GROUP BY "Vacation"."month"`
+vacationPlanRouter.get('/vacationsplan', async (req, res) => {
+  const vacationPlan: any = await prisma.$queryRaw`SELECT 
+    "VacationPlan"."id",
+    "VacationPlan"."mat",
+    "User"."posto",
+    "User"."name",
+    "VacationPlan"."phone",
+    CASE "optionOne"
+        WHEN 1 THEN 'Janeiro'
+        WHEN 2 THEN 'Fevereiro'
+        WHEN 3 THEN 'Março'
+        WHEN 4 THEN 'Abril'
+        WHEN 5 THEN 'Maio'
+        WHEN 6 THEN 'Junho'
+        WHEN 7 THEN 'Julho'
+        WHEN 8 THEN 'Agosto'
+        WHEN 9 THEN 'Setembro'
+        WHEN 10 THEN 'Outubro'
+        WHEN 11 THEN 'Novembro'
+        WHEN 12 THEN 'Dezembro'
+        ELSE 'Mês inválido' -- Caso o número não esteja entre 1 e 12
+    END AS opcaoOne,
+    CASE "optionTwo"
+        WHEN 1 THEN 'Janeiro'
+        WHEN 2 THEN 'Fevereiro'
+        WHEN 3 THEN 'Março'
+        WHEN 4 THEN 'Abril'
+        WHEN 5 THEN 'Maio'
+        WHEN 6 THEN 'Junho'
+        WHEN 7 THEN 'Julho'
+        WHEN 8 THEN 'Agosto'
+        WHEN 9 THEN 'Setembro'
+        WHEN 10 THEN 'Outubro'
+        WHEN 11 THEN 'Novembro'
+        WHEN 12 THEN 'Dezembro'
+        ELSE 'Mês inválido' -- Caso o número não esteja entre 1 e 12
+    END AS opcaoTwo
+    
+FROM 
+    "VacationPlan"
+    
+INNER JOIN "User"
+ON 
+"User"."mat" = "VacationPlan"."mat" ;`
 
-  res.json({ vacation })
+  res.json({ vacationPlan })
 })
 
 vacationPlanRouter.post('/vacationsplan', handleInputErrors, async (req, res) => {
