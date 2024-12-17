@@ -36,6 +36,7 @@ vacationPlanRouter.get('/vacationsplan/:phone', async (req, res) => {
   const vacation: any = await prisma.$queryRaw`SELECT 
     "VacationPlan"."id",
     "VacationPlan"."mat",
+    "VacationPlan"."phone",
     "User"."posto",
     "User"."name",
     "VacationPlan"."phone",
