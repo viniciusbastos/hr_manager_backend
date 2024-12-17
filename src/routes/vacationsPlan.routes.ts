@@ -40,7 +40,7 @@ vacationPlanRouter.get('/vacationsplan/:phone', async (req, res) => {
     "User"."name",
     "VacationPlan"."phone",
     CASE "optionOne"
-        WHEN 1 THEN 'Janeiro'
+        WHEN 1 THEN 'Janeiro de 2026'
         WHEN 2 THEN 'Fevereiro'
         WHEN 3 THEN 'Março'
         WHEN 4 THEN 'Abril'
@@ -55,7 +55,7 @@ vacationPlanRouter.get('/vacationsplan/:phone', async (req, res) => {
         ELSE 'Mês inválido' -- Caso o número não esteja entre 1 e 12
     END AS opcaoOne,
     CASE "optionTwo"
-        WHEN 1 THEN 'Janeiro'
+        WHEN 1 THEN 'Janeiro de 2026'
         WHEN 2 THEN 'Fevereiro'
         WHEN 3 THEN 'Março'
         WHEN 4 THEN 'Abril'
