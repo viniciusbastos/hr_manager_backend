@@ -39,7 +39,6 @@ vacationPlanRouter.get('/vacationsplan/:phone', async (req, res) => {
     "VacationPlan"."phone",
     "User"."posto",
     "User"."name",
-    "VacationPlan"."phone",
     CASE "optionOne"
         WHEN 1 THEN 'Janeiro de 2026'
         WHEN 2 THEN 'Fevereiro'
@@ -89,7 +88,7 @@ vacationPlanRouter.get('/vacationsplan', async (req, res) => {
     "User"."name",
     "VacationPlan"."phone",
     CASE "optionOne"
-        WHEN 1 THEN 'Janeiro'
+        WHEN 1 THEN 'Janeiro 2026'
         WHEN 2 THEN 'Fevereiro'
         WHEN 3 THEN 'Março'
         WHEN 4 THEN 'Abril'
@@ -104,7 +103,7 @@ vacationPlanRouter.get('/vacationsplan', async (req, res) => {
         ELSE 'Mês inválido' -- Caso o número não esteja entre 1 e 12
     END AS opcaoOne,
     CASE "optionTwo"
-        WHEN 1 THEN 'Janeiro'
+        WHEN 1 THEN 'Janeiro 2026'
         WHEN 2 THEN 'Fevereiro'
         WHEN 3 THEN 'Março'
         WHEN 4 THEN 'Abril'
@@ -126,7 +125,7 @@ INNER JOIN "User"
 ON 
 "User"."mat" = "VacationPlan"."mat" ;`
 
-  res.json({ vacationPlan })
+  res.json(vacationPlan)
 })
 
 vacationPlanRouter.post('/vacationsplan', handleInputErrors, async (req, res) => {
