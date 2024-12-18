@@ -22,7 +22,7 @@ vacationPlanRouter.get('/vacations', async (req, res) => {
   res.json({ vacation })
 })
 
-vacationPlanRouter.put('/vacationsplan/:id', async (req, res) => {
+vacationPlanRouter.put('/vacationplan/:id', async (req, res) => {
   try {
     const vacation: any = await prisma.vacationPlan.update({
       where: {
