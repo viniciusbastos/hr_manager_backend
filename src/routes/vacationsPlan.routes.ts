@@ -21,11 +21,15 @@ vacationPlanRouter.get('/vacations', async (req, res) => {
   res.json({ vacation })
 })
 
-vacationPlanRouter.get('/vacation/:id', async (req, res) => {
+vacationPlanRouter.put('/vacationsplan/:id', async (req, res) => {
   const { id } = req.params
-  const vacation: any = await prisma.vacation.findMany({
+  const vacation: any = await prisma.vacationPlan.update({
     where: {
-      belongsToId: id
+      id: parseInt(id)
+    },
+    data: {
+      optionOne: req.body.optionOne,
+      optionTwo: req.body.optionTwo
     }
   })
   res.json({ vacation })
@@ -123,7 +127,8 @@ FROM
     
 INNER JOIN "User"
 ON 
-"User"."mat" = "VacationPlan"."mat" ;`
+"User"."mat" = "VacationPlan"."mat" 
+ORDER BY "VacationPlan"."createdAt" DESC;`
 
   res.json(vacationPlan)
 })
