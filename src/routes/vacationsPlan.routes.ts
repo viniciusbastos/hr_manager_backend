@@ -22,10 +22,9 @@ vacationPlanRouter.get('/vacations', async (req, res) => {
 })
 
 vacationPlanRouter.put('/vacationsplan/:id', async (req, res) => {
-  const { id } = req.params
   const vacation: any = await prisma.vacationPlan.update({
     where: {
-      id: parseInt(id)
+      id: parseInt(req.params.id)
     },
     data: {
       optionOne: req.body.optionOne,
