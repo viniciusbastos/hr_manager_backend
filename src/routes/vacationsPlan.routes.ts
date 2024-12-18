@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, Router } from 'express'
 import { body } from 'express-validator'
 import { handleInputErrors } from '../modules/middleware'
 import { deleteVacation } from '../handlers/vacationHadlers'
+import { Prisma } from '@prisma/client'
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -22,16 +23,28 @@ vacationPlanRouter.get('/vacations', async (req, res) => {
 })
 
 vacationPlanRouter.put('/vacationsplan/:id', async (req, res) => {
-  const vacation: any = await prisma.vacationPlan.update({
-    where: {
-      id: parseInt(req.params.id)
-    },
-    data: {
-      optionOne: req.body.optionOne,
-      optionTwo: req.body.optionTwo
+  try {
+    const vacation: any = await prisma.vacationPlan.update({
+      where: {
+        id: parseInt(req.params.id)
+      },
+      data: {
+        optionOne: req.body.optionOne,
+        optionTwo: req.body.optionTwo
+      }
+    })
+    res.json({ vacation })
+  } catch (e) {
+    console.log
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === 'P2002') {
+        // Handle unique constraint violation
+      } else if (e.code === 'P2025') {
+        // Handle record not found
+      }
     }
-  })
-  res.json({ vacation })
+    throw e
+  }
 })
 vacationPlanRouter.get('/vacationsplan/:phone', async (req, res) => {
   const { phone } = req.params
