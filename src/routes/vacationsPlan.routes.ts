@@ -152,7 +152,8 @@ vacationPlanRouter.post('/vacationsplan', handleInputErrors, async (req, res) =>
       mat: req.body.mat,
       optionOne: req.body.optionOne,
       optionTwo: req.body.optionTwo,
-      phone: req.body.phone
+      phone: req.body.phone,
+      pelotao: req.body.pelotao
     }
   })
   return res.sendStatus(200)
