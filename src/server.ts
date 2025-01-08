@@ -60,6 +60,8 @@ const corsOptions = {
     }
   }
 }
+
+http://redecolaborativa.ssp.ba.gov.br/api/3/action/datastore_search_sql?sql=SELECT * from "5090253c-9656-4508-a50a-60928bd99256" WHERE "5090253c-9656-4508-a50a-60928bd99256"."AISP" = 48 ORDER BY "5090253c-9656-4508-a50a-60928bd99256"."DATA" DESC
 console.log(corsOptions)
 
 app.use(cors(corsOptions))
