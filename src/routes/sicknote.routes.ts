@@ -39,12 +39,28 @@ sicknoteRouter.get('/sicknote/:id', async (req, res, next) => {
     next(e)
   }
 })
-sicknoteRouter.get('/sicknote/month/:month', async (req, res, next) => {
+sicknoteRouter.get('/sicknote/month/:month/:year', async (req, res, next) => {
   try {
-    const { month } = req.params
+    const { month, year } = req.params
     const intMonth = parseInt(month)
-    const sicknote: any =
-      await prisma.$queryRaw`SELECT "User".id, "User"."name", "User".posto, "User".mat, "Sicknote"."InitialDate",("Sicknote"."InitialDate" + ("Sicknote"."Days" || ' days')::interval) as FinalDate, "Sicknote". FROM "User" INNER join "Sicknote" ON "User".id = "Sicknote"."belongsToId" WHERE "Sicknote"."month" =  ${intMonth}`
+    const intYear = parseInt(year)
+    const sicknote: any = await prisma.$queryRaw`SELECT 
+      "User".id, 
+      "User"."name", 
+      "User".posto, 
+      "User".mat, 
+      "Sicknote"."Days",
+      "Sicknote"."InitialDate",
+      "Sicknote"."InitialDate" + ("Sicknote"."Days" - 1) * INTERVAL '1 day' AS FinalDate
+     
+  FROM 
+      "User" 
+  INNER JOIN 
+      "Sicknote" ON "User".id = "Sicknote"."belongsToId" 
+  WHERE 
+      DATE_PART('month', "Sicknote"."InitialDate") = ${intMonth}
+  AND
+      DATE_PART('year', "Sicknote"."InitialDate") = ${intYear}`
     res.json({ sicknote })
   } catch (e) {
     next(e)

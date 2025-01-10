@@ -84,9 +84,9 @@ vacationRouter.delete(
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'http://evo-lk008co0wocs40wcgcwcsosc.49.13.196.55.sslip.io/message/sendText/Whast',
+      url: 'https://evolution.bastosdev.info/message/sendText/Whast',
       headers: {
-        apikey: '273657F3FF14-4D2E-A5A3-0A047A51138E'
+        apikey: process.env.EVOLUTION_API_KEY
       },
       data: data
     }
