@@ -19,6 +19,8 @@ sicknoteRouter.get('/sicknote', async (req, res) => {
     "Sicknote"."Days",
     "Sicknote"."Cid", 
     "Sicknote"."id",
+    "Sicknote"."DoctorName",
+    "Sicknote"."crm",
     "Sicknote"."createdAt"
     FROM "User" 
     INNER JOIN "Sicknote" ON "Sicknote"."belongsToId" = "User"."id" 
