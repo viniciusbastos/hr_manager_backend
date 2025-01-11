@@ -87,7 +87,7 @@ sicknoteRouter.post('/sicknote', async (req, res) => {
       belongsToId: req.body.belongsToId,
       Cid: req.body.Cid,
       crm: req.body.crm,
-      DoctorName: req.body.DoctorName
+      DoctorName: req.body.DoctorName,
       url: req.body.url
     }
   })
