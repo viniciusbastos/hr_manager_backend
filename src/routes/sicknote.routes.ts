@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
 import { handleInputErrors } from '../modules/middleware'
+import { url } from 'inspector'
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const sicknoteRouter = Router()
@@ -87,6 +88,7 @@ sicknoteRouter.post('/sicknote', async (req, res) => {
       Cid: req.body.Cid,
       crm: req.body.crm,
       DoctorName: req.body.DoctorName
+      url: req.body.url
     }
   })
   return res.sendStatus(200)
