@@ -45,7 +45,7 @@ sicknoteRouter.get('/sicknote/month/:month/:year', async (req, res, next) => {
     const intMonth = parseInt(month)
     const intYear = parseInt(year)
     const sicknote: any = await prisma.$queryRaw`SELECT 
-      ""User".id, 
+    "User".id, 
     "User"."name", 
     "User".posto, 
     "User".mat, 
@@ -53,8 +53,7 @@ sicknoteRouter.get('/sicknote/month/:month/:year', async (req, res, next) => {
     "Sicknote"."Cid",
     "Sicknote"."DoctorName",
     "Sicknote"."InitialDate",
-      "Sicknote"."InitialDate" + ("Sicknote"."Days" - 1) * INTERVAL '1 day' AS FinalDate
-     
+    "Sicknote"."InitialDate" + ("Sicknote"."Days" - 1) * INTERVAL '1 day' AS FinalDate
   FROM 
       "User" 
   INNER JOIN 
