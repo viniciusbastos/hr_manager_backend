@@ -188,8 +188,8 @@ model Weapons {
   location        Int?
   status          Int?
   caliber         Int?
-  createdAt    DateTime  @default(now())
-  updatedAt DateTime @updatedAt @default(now())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime @updatedAt @default(now())
   ProfileWeapons   ProfileWeapons[]
 }
 

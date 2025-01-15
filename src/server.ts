@@ -36,6 +36,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import { auditLog } from './middleware/auditlog.middleware'
 import uploadRouter from './testes3'
 import vacationPlanRouter from './routes/vacationsPlan.routes'
+import auditLogsnoteRouter from './routes/auditlogs.routes'
 // import whatsappRouter from './routes/whatsapp.routes'
 
 const genAi = new GoogleGenerativeAI(process.env.GEMINI_API)
@@ -61,8 +62,8 @@ const corsOptions = {
   }
 }
 
-http://redecolaborativa.ssp.ba.gov.br/api/3/action/datastore_search_sql?sql=SELECT * from "5090253c-9656-4508-a50a-60928bd99256" WHERE "5090253c-9656-4508-a50a-60928bd99256"."AISP" = 48 ORDER BY "5090253c-9656-4508-a50a-60928bd99256"."DATA" DESC
-console.log(corsOptions)
+//redecolaborativa.ssp.ba.gov.br/api/3/action/datastore_search_sql?sql=SELECT * from "5090253c-9656-4508-a50a-60928bd99256" WHERE "5090253c-9656-4508-a50a-60928bd99256"."AISP" = 48 ORDER BY "5090253c-9656-4508-a50a-60928bd99256"."DATA" DESC
+http: console.log(corsOptions)
 
 app.use(cors(corsOptions))
 
@@ -71,6 +72,8 @@ app.post('/api/signin', signin)
 
 app.use('/api', protect, [adminMiddleware, auditLog], router)
 app.use('/api', protect, [adminMiddleware, auditLog], usersRouter)
+app.use('/api', protect, [adminMiddleware], auditLogsnoteRouter)
+
 app.use('/api', protect, [adminMiddleware, auditLog], vacationRouter)
 app.use('/api', protect, [adminMiddleware, auditLog], sicknoteRouter)
 app.use('/api', protect, [adminMiddleware, auditLog], weaponsRouter)
