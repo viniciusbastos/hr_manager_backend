@@ -188,6 +188,7 @@ model Weapons {
   location        Int?
   status          Int?
   caliber         Int?
+  brand           Int?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime @updatedAt @default(now())
   ProfileWeapons   ProfileWeapons[]
@@ -318,5 +319,12 @@ model Posto {
   nome             String    
   createdAt        DateTime  @default(now())
   updatedAt        DateTime @updatedAt @default(now())
+
+}
+model WeaponBrand {
+  id           Int      @id @default(autoincrement())
+  name         String  @default()
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime @updatedAt @default(now())
 
 }

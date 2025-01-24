@@ -4,7 +4,11 @@ import { body } from 'express-validator'
 import { handleInputErrors } from '../modules/middleware'
 import { deleteVacation } from '../handlers/vacationHadlers'
 import { request } from 'http'
-import { showWeapons, updateProfileWeapon } from '../controllers/weapons.controllers'
+import {
+  showWeapons,
+  updateProfileWeapon,
+  updateProfileWeaponAndLocation
+} from '../controllers/weapons.controllers'
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -35,25 +39,37 @@ weaponsRouter.get('/weapons/label', async (req, res) => {
 weaponsRouter.get('/weapons/fixed', async (req, res) => {
   const weapons: any = await prisma.$queryRaw`
     SELECT 
-		"User".mat, 
+	"User".mat, 
     "User".posto, 
     "User"."name", 
     "Weapons".model, 
     "Weapons"."serialNumber", 
+    "WeaponType"."type" as "weaponType",
+    "WeaponStatus"."Status",
+    "WeaponCaliber"."Caliber",
+    "WeaponLocation"."location",
     "ProfileWeapons"."InitialDate", 
     "ProfileWeapons"."discharge", 
-    "ProfileWeapons"."id" 
+    "ProfileWeapons"."id",
+    "WeaponBrand"."name" as brand
     FROM "ProfileWeapons"  
     INNER JOIN "Weapons" 
     ON 
     "ProfileWeapons"."belongsToWeaponsId" = "Weapons".id 
     INNER JOIN "User" 
     ON "ProfileWeapons"."belongsToId" = "User".id 
+    INNER JOIN "WeaponBrand" 
+    ON "WeaponBrand".id = "Weapons".brand
+    INNER JOIN "WeaponType" ON "WeaponType"."id" = "Weapons"."type" 
+INNER JOIN "WeaponStatus" ON "WeaponStatus"."id" = "Weapons"."status" 
+INNER JOIN "WeaponCaliber" ON "WeaponCaliber"."id" = "Weapons"."caliber" 
+INNER JOIN "WeaponLocation" ON "WeaponLocation"."id" = "Weapons"."location"
     WHERE "ProfileWeapons"."discharge" IS FALSE
     ORDER BY "ProfileWeapons"."InitialDate" Desc
 `
   res.json(weapons)
 })
+
 weaponsRouter.get('/weapons/info', async (req, res) => {
   const weapons: any = await prisma.$queryRaw`
   SELECT "Weapons".id, "Weapons".model, "Weapons"."serialNumber", "WeaponType"."type", "WeaponStatus"."Status", "WeaponCaliber"."Caliber", "WeaponLocation"."location" FROM "Weapons" 
@@ -100,6 +116,51 @@ weaponsRouter.post('/weapons/fixed', async (req, res) => {
 
   return res.sendStatus(200)
 })
+
+weaponsRouter.post('/weapons/copy/:id', async (req, res) => {
+  try {
+    const [newWeapon] = await prisma.$transaction(async prisma => {
+      // Get the existing weapon
+      const existingWeapon = await prisma.profileWeapons.findUnique({
+        where: {
+          id: parseInt(req.params.id)
+        }
+      })
+
+      if (!existingWeapon) {
+        throw new Error('Weapon not found')
+      }
+
+      // Create new weapon with copied data
+      const weaponCopy = await prisma.profileWeapons.create({
+        data: {
+          // Copy all relevant fields except unique identifiers
+          InitialDate: new Date(),
+          belongsToId: existingWeapon.belongsToId,
+          belongsToWeaponsId: existingWeapon.belongsToWeaponsId
+          // Add any other fields you want to copy
+        }
+      })
+      console.log(weaponCopy)
+      const updateProfileWeapon = await prisma.profileWeapons.update({
+        where: { id: existingWeapon.id },
+        data: {
+          discharge: true
+        }
+      })
+      return [weaponCopy]
+    })
+
+    return res.status(201).json({
+      message: 'Carga fixa renovada com sucesso!',
+      weapon: newWeapon
+    })
+  } catch (error) {
+    return res.status(400).json({
+      error: error.message
+    })
+  }
+})
 //Delete weapon and update weapon status
 weaponsRouter.delete('/weapons/:id', async (req, res) => {
   try {
@@ -132,6 +193,7 @@ weaponsRouter.delete('/weapons/:id', async (req, res) => {
 
     // Update the corresponding weapon in weapons table
     console.log(`Updating weapons with ID: ${weapon.belongsToWeaponsId} to location 2`)
+
     const updatedWeapon = await prisma.weapons.update({
       where: { id: weapon.belongsToWeaponsId },
       data: { location: 2 }
@@ -146,7 +208,6 @@ weaponsRouter.delete('/weapons/:id', async (req, res) => {
 })
 
 //Update weapon discharge and update weapon status
-weaponsRouter.put('/weaponsfixed/:id', updateProfileWeapon)
-
+weaponsRouter.put('/weaponsfixed/:id', updateProfileWeaponAndLocation)
 
 export default weaponsRouter

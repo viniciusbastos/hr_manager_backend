@@ -22,7 +22,6 @@ export const updateProfileWeapon: RequestHandler = async (req, res, next) => {
   try {
     const id = req.params
     const weaponChargeId = parseInt(req.params.id, 10)
-    console.log(`Searching for profileWeapons with ID: ${weaponChargeId}`)
 
     if (isNaN(weaponChargeId)) {
       console.error('Invalid ID format:', id)
@@ -30,7 +29,7 @@ export const updateProfileWeapon: RequestHandler = async (req, res, next) => {
     }
 
     // Find the weapon to be deleted
-    console.log(`Searching for profileWeapons with ID: ${id}`)
+    console.log(`Searching for profileWeapons with ID: ${weaponChargeId}`)
     const weapon = await prisma.profileWeapons.findUnique({
       where: { id: weaponChargeId }
     })
@@ -41,7 +40,7 @@ export const updateProfileWeapon: RequestHandler = async (req, res, next) => {
     }
 
     // Delete the weapon from profileWeapons
-    console.log(`Deleting profileWeapons with ID: ${id}`)
+    console.log(`Updating profileWeapons with ID: ${id}`)
     const updateProfileWeapon = await prisma.profileWeapons.update({
       where: { id: weaponChargeId },
       data: {
@@ -77,7 +76,7 @@ export const updateProfileWeaponAndLocation: RequestHandler = async (req, res, n
     }
 
     // Delete the weapon from profileWeapons
-    console.log(`Deleting profileWeapons with ID: ${id}`)
+    console.log(`Updating profileWeapons with ID: ${id}`)
     const updateProfileWeapon = await prisma.profileWeapons.update({
       where: { id: weaponChargeId },
       data: {

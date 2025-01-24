@@ -3,7 +3,6 @@ import { url } from 'inspector'
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
-
 const auditLogsnoteRouter = Router()
 
 auditLogsnoteRouter.post('/audit-logs', async (req, res) => {

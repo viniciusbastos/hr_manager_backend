@@ -63,7 +63,6 @@ const corsOptions = {
 }
 
 //redecolaborativa.ssp.ba.gov.br/api/3/action/datastore_search_sql?sql=SELECT * from "5090253c-9656-4508-a50a-60928bd99256" WHERE "5090253c-9656-4508-a50a-60928bd99256"."AISP" = 48 ORDER BY "5090253c-9656-4508-a50a-60928bd99256"."DATA" DESC
-http: console.log(corsOptions)
 
 app.use(cors(corsOptions))
 
@@ -73,7 +72,6 @@ app.post('/api/signin', signin)
 app.use('/api', protect, [adminMiddleware, auditLog], router)
 app.use('/api', protect, [adminMiddleware, auditLog], usersRouter)
 app.use('/api', protect, [adminMiddleware], auditLogsnoteRouter)
-
 app.use('/api', protect, [adminMiddleware, auditLog], vacationRouter)
 app.use('/api', protect, [adminMiddleware, auditLog], sicknoteRouter)
 app.use('/api', protect, [adminMiddleware, auditLog], weaponsRouter)
