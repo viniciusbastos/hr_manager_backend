@@ -1,6 +1,8 @@
 import PDFDocument from 'pdfkit'
 import fs, { existsSync } from 'fs'
-
+const path = require('path')
+import axios from 'axios'
+const imagePath = path.join(__dirname, '../../images/pmba2.png')
 interface WeaponData {
   name: string
   posto: string
@@ -9,14 +11,21 @@ interface WeaponData {
   weaponType: string
   model: string
   serialNumber: string
+  brand: string
+  caliber: string
+  status: string
+  location: string
+  initialDate: string
+  discharge: boolean
 }
 
-class WeaponRequestPDF {
+export class WeaponRequestPDF {
   private doc: PDFKit.PDFDocument
   private weapon: WeaponData
 
   constructor(weapon: WeaponData) {
     this.weapon = weapon
+    console.log(weapon)
     this.doc = new PDFDocument({ size: 'A4', margin: 50 })
     this.doc.initForm()
   }
@@ -57,20 +66,13 @@ class WeaponRequestPDF {
     this.doc.formText('basicField', 10, 10, 200, 30)
 
     // Center Section
-    try {
-      this.doc.image(
-        'https://github.com/viniciusbastos/hr_manager_backend/blob/main/src/assets/pmba2.png',
-        30,
-        150,
-        {
-          fit: [100, 100],
-          align: 'center',
-          valign: 'center'
-        }
-      )
-    } catch (error) {
-      console.warn('Image not found, skipping logo')
-    }
+
+    this.doc.image(imagePath, 260, 60, {
+      fit: [80, 80],
+      align: 'center',
+      valign: 'center'
+    })
+
     this.doc
       .fontSize(12)
       .text('POLÍCIA MILITAR DA BAHIA', 50, 150, { align: 'center' })
@@ -117,12 +119,9 @@ class WeaponRequestPDF {
       .lineTo(400, signatureY)
       .stroke()
       .fontSize(10)
-      .text(
-        `${this.weapon.posto} ${this.weapon.name.toUpperCase()} - ${this.weapon.mat}`,
-        120,
-        signatureY + 5,
-        { align: 'center' }
-      )
+      .text(`${this.weapon.posto} ${this.weapon.name} - ${this.weapon.mat}`, 120, signatureY + 5, {
+        align: 'center'
+      })
   }
 
   private addCorregSection(): void {
@@ -163,7 +162,7 @@ class WeaponRequestPDF {
     currentX = 50
     const rowData = [
       this.weapon.id,
-      `${this.weapon.weaponType} ${this.weapon.model}`,
+      `${this.weapon.weaponType} ${this.weapon.model} ${this.weapon.caliber} ${this.weapon.brand}`,
       this.weapon.serialNumber
     ]
 
@@ -180,16 +179,19 @@ class WeaponRequestPDF {
   }
 }
 
-// Usage example:
-const weaponData: WeaponData = {
-  name: 'John Doe',
-  posto: 'Soldado',
-  mat: '123456',
-  id: '1',
-  weaponType: 'Pistola',
-  model: 'Taurus',
-  serialNumber: 'ABC123'
-}
-
-const pdfGenerator = new WeaponRequestPDF(weaponData)
+const pdfGenerator = new WeaponRequestPDF({
+  name: '',
+  posto: '',
+  mat: '',
+  id: '',
+  weaponType: '',
+  model: '',
+  serialNumber: '',
+  brand: '',
+  caliber: '',
+  status: '',
+  location: '',
+  initialDate: '',
+  discharge: true
+})
 pdfGenerator.generatePDF('weapon-request.pdf')

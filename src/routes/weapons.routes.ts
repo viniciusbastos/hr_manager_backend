@@ -1,6 +1,7 @@
 import { Weapons } from './../../node_modules/.prisma/client/index.d'
 import { Router } from 'express'
 import { body } from 'express-validator'
+import * as fs from 'fs'
 import { handleInputErrors } from '../modules/middleware'
 import { deleteVacation } from '../handlers/vacationHadlers'
 import { request } from 'http'
@@ -9,6 +10,9 @@ import {
   updateProfileWeapon,
   updateProfileWeaponAndLocation
 } from '../controllers/weapons.controllers'
+import { WeaponRequestPDF } from '../modules/pdf'
+import path from 'path'
+import { json } from 'stream/consumers'
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -210,4 +214,99 @@ weaponsRouter.delete('/weapons/:id', async (req, res) => {
 //Update weapon discharge and update weapon status
 weaponsRouter.put('/weaponsfixed/:id', updateProfileWeaponAndLocation)
 
+weaponsRouter.post('/generate-pdf/:id', async (req, res) => {
+  const id = parseInt(req.params.id)
+  const fs = require('fs')
+  const path = require('path')
+  try {
+    const weaponData = await prisma.$queryRaw`
+      SELECT 
+        "User".mat, 
+        "User".posto, 
+        "User"."name", 
+        "Weapons".model, 
+        "Weapons"."serialNumber", 
+        "WeaponType"."type" as "weaponType",
+        "WeaponStatus"."Status",
+        "WeaponCaliber"."Caliber",
+        "WeaponLocation"."location",
+        "ProfileWeapons"."InitialDate", 
+        "ProfileWeapons"."discharge", 
+        "ProfileWeapons"."id",
+        "WeaponBrand"."name" as brand
+      FROM "ProfileWeapons"  
+      INNER JOIN "Weapons" 
+      ON 
+      "ProfileWeapons"."belongsToWeaponsId" = "Weapons".id 
+      INNER JOIN "User" 
+      ON "ProfileWeapons"."belongsToId" = "User".id 
+      INNER JOIN "WeaponBrand" 
+      ON "WeaponBrand".id = "Weapons".brand
+      INNER JOIN "WeaponType" ON "WeaponType"."id" = "Weapons"."type" 
+      INNER JOIN "WeaponStatus" ON "WeaponStatus"."id" = "Weapons"."status" 
+      INNER JOIN "WeaponCaliber" ON "WeaponCaliber"."id" = "Weapons"."caliber" 
+      INNER JOIN "WeaponLocation" ON "WeaponLocation"."id" = "Weapons"."location"
+      WHERE "ProfileWeapons"."discharge" IS FALSE AND "ProfileWeapons"."id" = ${id}
+      ORDER BY "ProfileWeapons"."InitialDate" DESC
+    `
+
+    if (weaponData.length === 0) {
+      return res.status(404).json({ error: 'Weapon data not found' })
+    }
+
+    const weaponDataJson = JSON.parse(JSON.stringify(weaponData[0])) // Get first result and parse
+    console.log(weaponDataJson)
+
+    // Create unique filename using timestamp
+    const fileName = await `weapon-request-${weaponDataJson.id}.pdf`
+    const outputPath = await path.join(__dirname, '../assets/', fileName)
+
+    // Ensure the directory exists
+    const dirPath = path.dirname(outputPath)
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true })
+    }
+
+    // Generate PDF
+    const pdfGenerator = new WeaponRequestPDF(weaponDataJson)
+    await pdfGenerator.generatePDF(outputPath)
+    const axios = require('axios')
+    let data = JSON.stringify({
+      number: '557592313592 (Recipient number with Country Code)',
+      mediatype: 'document',
+      mimetype: 'application/pdf',
+      caption: 'Teste de caption',
+      media:
+        'https://github.com/viniciusbastos/hr_manager_backend/blob/main/src/assets/weapon-request-59.pdf',
+      fileName: fileName
+    })
+    let config = {
+      method: 'post',
+      maxBodyLength: Infinity,
+      url: 'https://evolution.bastosdev.info/message/sendMedia/Whast',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: 'd91f2743-1587-4967-b8f8-04cf1cc1dadd'
+      },
+      data: data
+    }
+
+    axios
+      .request(config)
+      .then(response => {
+        console.log(JSON.stringify(response.data))
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    res.json({ message: 'PDF generated successfully', fileName })
+  } catch (error) {
+    console.error('Error generating weapon request PDF:', error)
+    return res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 export default weaponsRouter
+function jsonparse(weaponData: any) {
+  throw new Error('Function not implemented.')
+}
