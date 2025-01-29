@@ -13,6 +13,7 @@ import {
 import { WeaponRequestPDF } from '../modules/pdf'
 import path from 'path'
 import { json } from 'stream/consumers'
+import sendDocumentToNumber from '../modules/sendDocument'
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -261,45 +262,51 @@ weaponsRouter.post('/generate-pdf/:id', async (req, res) => {
     const fileName = await `weapon-request-${weaponDataJson.id}.pdf`
     const outputPath = await path.join(__dirname, '../assets/', fileName)
 
-    // Ensure the directory exists
-    const dirPath = path.dirname(outputPath)
-    if (!fs.existsSync(dirPath)) {
-      fs.mkdirSync(dirPath, { recursive: true })
-    }
-
     // Generate PDF
-    const pdfGenerator = new WeaponRequestPDF(weaponDataJson)
-    await pdfGenerator.generatePDF(outputPath)
-    const axios = require('axios')
-    let data = JSON.stringify({
-      number: '557592313592 (Recipient number with Country Code)',
-      mediatype: 'document',
-      mimetype: 'application/pdf',
-      caption: 'Teste de caption',
-      media:
-        'https://github.com/viniciusbastos/hr_manager_backend/blob/main/src/assets/weapon-request-59.pdf',
-      fileName: fileName
+
+    await new Promise<void>((resolve, reject) => {
+      try {
+        const pdfGenerator = new WeaponRequestPDF(weaponDataJson)
+        pdfGenerator.generatePDF(outputPath)
+
+        // Wait for file to exist before proceeding
+        const checkFileExists = setInterval(() => {
+          if (fs.existsSync(outputPath)) {
+            clearInterval(checkFileExists)
+            resolve()
+          }
+        }, 100)
+
+        // Timeout after 5 seconds
+        setTimeout(() => {
+          clearInterval(checkFileExists)
+          reject(new Error('PDF generation timeout'))
+        }, 5000)
+      } catch (error) {
+        reject(error)
+      }
     })
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://evolution.bastosdev.info/message/sendMedia/Whast',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: 'd91f2743-1587-4967-b8f8-04cf1cc1dadd'
-      },
-      data: data
+
+    // Verify file exists
+    if (!fs.existsSync(outputPath)) {
+      throw new Error('PDF file not generated')
     }
 
-    axios
-      .request(config)
-      .then(response => {
-        console.log(JSON.stringify(response.data))
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    res.json({ message: 'PDF generated successfully', fileName })
+    const pdfBuffer = fs.readFileSync(outputPath)
+    const base64PDF = pdfBuffer.toString('base64')
+
+    // try {
+    //   await sendDocumentToNumber('+557592313592', fileName, base64PDF)
+    // } catch (error) {
+    //   console.error('Failed to send document:', error)
+    // }
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${fileName}"`
+    })
+    await new Promise<void>((resolve, reject) => {
+      res.download(outputPath, fileName)
+    })
   } catch (error) {
     console.error('Error generating weapon request PDF:', error)
     return res.status(500).json({ error: 'Internal server error' })
@@ -307,6 +314,3 @@ weaponsRouter.post('/generate-pdf/:id', async (req, res) => {
 })
 
 export default weaponsRouter
-function jsonparse(weaponData: any) {
-  throw new Error('Function not implemented.')
-}

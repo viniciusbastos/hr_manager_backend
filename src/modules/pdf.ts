@@ -12,11 +12,26 @@ interface WeaponData {
   model: string
   serialNumber: string
   brand: string
-  caliber: string
+  Caliber: string
   status: string
   location: string
   initialDate: string
   discharge: boolean
+}
+const weaponData: WeaponData = {
+  name: '',
+  posto: '',
+  mat: '',
+  id: '',
+  weaponType: '',
+  model: '',
+  serialNumber: '',
+  brand: '',
+  Caliber: '',
+  status: '',
+  location: '',
+  initialDate: '',
+  discharge: true
 }
 
 export class WeaponRequestPDF {
@@ -109,7 +124,7 @@ export class WeaponRequestPDF {
   private addMainContent(): void {
     this.doc
       .fontSize(12)
-      .text(`Eu, ${this.weapon.name}, ${this.weapon.posto}, Mat:${this.weapon.mat}`, 50, 350)
+      .text(`Eu, ${this.weapon?.name}, ${this.weapon?.posto}, Mat:${this.weapon?.mat}`, 50, 350)
   }
 
   private addSignatures(): void {
@@ -119,9 +134,14 @@ export class WeaponRequestPDF {
       .lineTo(400, signatureY)
       .stroke()
       .fontSize(10)
-      .text(`${this.weapon.posto} ${this.weapon.name} - ${this.weapon.mat}`, 120, signatureY + 5, {
-        align: 'center'
-      })
+      .text(
+        `${this.weapon?.posto} ${this.weapon?.name} - ${this.weapon?.mat}`,
+        120,
+        signatureY + 5,
+        {
+          align: 'center'
+        }
+      )
   }
 
   private addCorregSection(): void {
@@ -161,9 +181,9 @@ export class WeaponRequestPDF {
     // Draw table data
     currentX = 50
     const rowData = [
-      this.weapon.id,
-      `${this.weapon.weaponType} ${this.weapon.model} ${this.weapon.caliber} ${this.weapon.brand}`,
-      this.weapon.serialNumber
+      this.weapon?.id,
+      `${this.weapon?.weaponType} ${this.weapon?.model} ${this.weapon?.Caliber} ${this.weapon?.brand}`,
+      this.weapon?.serialNumber
     ]
 
     rowData.forEach((data, i) => {
@@ -175,23 +195,10 @@ export class WeaponRequestPDF {
     })
 
     // Add BIR number
-    this.doc.text('BIR Nº _______ de ___ / ___ / ___', 350, tableY + 50)
+    this.doc.text('BIR Nº _______ de ___ / ___ / ___', 350, tableY + 70)
   }
 }
+// Example usage
 
-const pdfGenerator = new WeaponRequestPDF({
-  name: '',
-  posto: '',
-  mat: '',
-  id: '',
-  weaponType: '',
-  model: '',
-  serialNumber: '',
-  brand: '',
-  caliber: '',
-  status: '',
-  location: '',
-  initialDate: '',
-  discharge: true
-})
+const pdfGenerator = new WeaponRequestPDF(weaponData)
 pdfGenerator.generatePDF('weapon-request.pdf')
