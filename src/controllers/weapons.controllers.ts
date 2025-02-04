@@ -83,12 +83,20 @@ export const updateProfileWeaponAndLocation: RequestHandler = async (req, res, n
         discharge: true
       }
     })
-    // Update the corresponding weapon in weapons table
-    console.log(`Updating weapons with ID: ${weapon.belongsToWeaponsId} to location 2`)
-    const updatedWeapon = await prisma.weapons.update({
-      where: { id: weapon.belongsToWeaponsId },
-      data: { location: 2 }
-    })
+    let updatedWeapon: any
+    try {
+      // Update the corresponding weapon in weapons table
+      if (!weapon.belongsToWeaponsId) {
+        return res.status(400).json({ error: 'No weapon ID associated with this profile' })
+      }
+      console.log(`Updating weapons with ID: ${weapon.belongsToWeaponsId} to location 2`)
+      const updatedWeapon = await prisma.weapons.update({
+        where: { id: weapon.belongsToWeaponsId },
+        data: { location: 2 }
+      })
+    } catch (e) {
+      console.error('Error updating weapon:', e)
+    }
 
     console.log('Successfully deleted profileWeapon and updated weapon')
     res.json({ updateProfileWeapon, updatedWeapon }).status(200)
