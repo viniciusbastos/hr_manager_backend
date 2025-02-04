@@ -82,11 +82,11 @@ export class WeaponRequestPDF {
 
     // Center Section
 
-    this.doc.image(imagePath, 260, 60, {
-      fit: [80, 80],
-      align: 'center',
-      valign: 'center'
-    })
+    // this.doc.image(imagePath, 260, 60, {
+    //   fit: [80, 80],
+    //   align: 'center',
+    //   valign: 'center'
+    // })
 
     this.doc
       .fontSize(12)
