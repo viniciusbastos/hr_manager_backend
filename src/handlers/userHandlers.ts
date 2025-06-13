@@ -1,6 +1,7 @@
 import { comparePasswords, createJWT, hashPassword } from './../modules/auth'
 import prisma from '../db'
 import { Request, Response } from 'express'
+import bcrypt from 'bcrypt'
 
 export const createUser = async (req: any, res: any, next: any) => {
   try {
@@ -45,14 +46,14 @@ export const signin = async (req: Request, res: Response) => {
       }
     }
   })
-  console.log(user.profile[0].phone)
   const id = req.body.id
   const useremail = req.body.email
   const role = req.body.role
   const name = req.body.name
   const posto = req.body.role
-
-  const isValid = await comparePasswords(req.body.password, user.password)
+  const isValid = async (plainPassword: string, hashedPassword: string): Promise<boolean> => {
+    return bcrypt.compare(plainPassword, hashedPassword)
+  }
   if (!isValid) {
     res.status(401)
     res.send('Invalid username or password')
