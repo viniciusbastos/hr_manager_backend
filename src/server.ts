@@ -43,7 +43,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // 👇️ specify origins to allow
-const whitelist = ['https://app.bastosdev.info', 'http://localhost:4173']
+const whitelist = ['https://app.bastosdev.xyz', 'http://localhost:4173']
 
 // ✅ Enable pre-flight requests
 app.options('*', cors())
@@ -58,8 +58,6 @@ const corsOptions = {
     }
   }
 }
-
-//redecolaborativa.ssp.ba.gov.br/api/3/action/datastore_search_sql?sql=SELECT * from "5090253c-9656-4508-a50a-60928bd99256" WHERE "5090253c-9656-4508-a50a-60928bd99256"."AISP" = 48 ORDER BY "5090253c-9656-4508-a50a-60928bd99256"."DATA" DESC
 
 app.use(cors(corsOptions))
 
