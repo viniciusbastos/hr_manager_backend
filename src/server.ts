@@ -32,14 +32,11 @@ import vacationRouter from './routes/vacations.routes'
 import sicknoteRouter from './routes/sicknote.routes'
 import weaponsRouter from './routes/weapons.routes'
 import adminMiddleware from './middleware/admins.middleware'
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { auditLog } from './middleware/auditlog.middleware'
 import uploadRouter from './testes3'
 import vacationPlanRouter from './routes/vacationsPlan.routes'
 import auditLogsnoteRouter from './routes/auditlogs.routes'
 // import whatsappRouter from './routes/whatsapp.routes'
-
-const genAi = new GoogleGenerativeAI(process.env.GEMINI_API)
 
 app.use(morgan('dev'))
 app.use(express.json())
