@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "target": "es2020",
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
@@ -9,4 +10,4 @@
     "declaration": true
   },
   "include": ["src/**/*.ts", "src/routes/weapons.jest.js", "src/routes/weapons.test.jest"]
-  }
+}

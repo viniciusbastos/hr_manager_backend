@@ -1,2 +1,0 @@
-172.18.0.1 - - [31/Jan/2025:14:22:01 +0000] "GET / HTTP/1.1" 400 650 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
-172.18.0.1 - - [31/Jan/2025:14:22:01 +0000] "GET /favicon.ico HTTP/1.1" 400 650 "http://localhost:443/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36"
