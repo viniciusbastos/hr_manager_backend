@@ -17,6 +17,25 @@ export const showWeapons: RequestHandler = async (req: Request, res: Response, n
     next(e)
   }
 }
+export const newWeapons: RequestHandler = async (req: Request, res: Response, next) => {
+  try {
+    console.log(req.body)
+    const weapons: any = await prisma.weapons.create({
+      data: {
+        model: req.body.model,
+        type: req.body.type ? parseInt(req.body.type, 10) : undefined,
+        serialNumber: req.body.serialNumber,
+        location: req.body.location ? parseInt(req.body.location, 10) : undefined,
+        status: req.body.status ? parseInt(req.body.status, 10) : undefined,
+        caliber: req.body.caliber ? parseInt(req.body.caliber, 10) : undefined,
+        brand: req.body.brand ? parseInt(req.body.brand, 10) : undefined
+      }
+    })
+    res.status(201).json({ weapons })
+  } catch (e) {
+    next(e)
+  }
+}
 
 export const updateProfileWeapon: RequestHandler = async (req, res, next) => {
   try {

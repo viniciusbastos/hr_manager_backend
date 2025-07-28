@@ -6,6 +6,7 @@ import { handleInputErrors } from '../modules/middleware'
 import { deleteVacation } from '../handlers/vacationHadlers'
 import { request } from 'http'
 import {
+  newWeapons,
   showWeapons,
   updateProfileWeapon,
   updateProfileWeaponAndLocation
@@ -20,6 +21,8 @@ const prisma = new PrismaClient()
 const weaponsRouter = Router()
 
 weaponsRouter.get('/weapons', showWeapons)
+weaponsRouter.post('/newWeapons', newWeapons)
+
 weaponsRouter.get('/weapons/label', async (req, res) => {
   const weapons: any = await prisma.$queryRaw`
     SELECT 
@@ -146,7 +149,6 @@ weaponsRouter.post('/weapons/copy/:id', async (req, res) => {
           // Add any other fields you want to copy
         }
       })
-      console.log(weaponCopy)
       const updateProfileWeapon = await prisma.profileWeapons.update({
         where: { id: existingWeapon.id },
         data: {

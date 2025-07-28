@@ -1,3 +1,4 @@
+import { Profile } from './../../node_modules/.prisma/client/index.d'
 import { comparePasswords, createJWT, hashPassword } from './../modules/auth'
 import prisma from '../db'
 import { Request, Response } from 'express'
@@ -12,7 +13,13 @@ export const createUser = async (req: any, res: any, next: any) => {
         name: req.body.name,
         posto: req.body.posto,
         mat: req.body.mat,
-        useremail: req.body.email
+        useremail: req.body.email,
+
+        Profileunidade: {
+          create: {
+            belongsToUnidadeId: 1
+          }
+        }
       }
     })
     const token = createJWT(user)

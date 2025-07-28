@@ -7,14 +7,11 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const router = Router()
 
-
-
-
 router.get('/efetivo', async (req, res) => {
   const user =
     await prisma.$queryRaw` SELECT "User".posto, COUNT(*)::int as qtd FROM "User" INNER JOIN "Profileunidade" ON "Profileunidade"."belongsToId" = "User".id  WHERE "Profileunidade"."belongsToUnidadeId" = 1 GROUP BY "User".posto`
 
-    res.json(user)
+  res.json(user)
 })
 
 router.get('/efetivo/:id', (req, res) => {})
@@ -62,8 +59,6 @@ router.put('/vacation/:id', (req, res) => {})
 
 router.delete('/vacation/:id', (req, res) => {})
 
-
-
 router.get('/healthprofessional', async (req, res, next) => {
   try {
     const user = await prisma.healthProfessionals.findMany()
@@ -75,16 +70,14 @@ router.get('/healthprofessional', async (req, res, next) => {
 
 router.get('/appointments', async (req, res, next) => {
   try {
-    const appointment =     
-    await prisma.$queryRaw`SELECT "User".mat, "User".posto, "User"."name", "Appointment".progress, "Appointment"."Date", "Appointment"."Service", "Appointment"."Specialities", "HealthProfessionals"."Name" FROM "Appointment" INNER JOIN "User" ON "Appointment"."belongsToId" = "User".id  INNER JOIN "HealthProfessionals" ON "Appointment"."belongsToProffessionalsId" = "HealthProfessionals".id`
+    const appointment =
+      await prisma.$queryRaw`SELECT "User".mat, "User".posto, "User"."name", "Appointment".progress, "Appointment"."Date", "Appointment"."Service", "Appointment"."Specialities", "HealthProfessionals"."Name" FROM "Appointment" INNER JOIN "User" ON "Appointment"."belongsToId" = "User".id  INNER JOIN "HealthProfessionals" ON "Appointment"."belongsToProffessionalsId" = "HealthProfessionals".id`
 
-     res.json(appointment)
+    res.json(appointment)
   } catch (e) {
     next(e)
   }
-
 })
-
 
 router.post('/appointment', handleInputErrors, async (req, res) => {
   const appointment = await prisma.appointment.create({
@@ -100,4 +93,3 @@ router.post('/appointment', handleInputErrors, async (req, res) => {
 })
 
 export default router
-
