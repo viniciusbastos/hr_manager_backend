@@ -202,6 +202,7 @@ model ProfileWeapons {
   id                        Int                  @id @default(autoincrement())
   belongsToId               String
   belongsToWeaponsId        Int
+  belongsToAmmunitionId     Int
   InitialDate               DateTime             @db.Date
   discharge                 Boolean              @default(false)
   createdAt                 DateTime  @default(now())
