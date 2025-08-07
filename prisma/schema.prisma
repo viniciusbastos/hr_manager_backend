@@ -360,7 +360,7 @@ model FuelSupply {
 
 model Vehicle {
   id          Int      @id @default(autoincrement())
-  plate       String   @unique
+  plate       String?   @unique
   model       String?
   brand       String?
   year        Int?
