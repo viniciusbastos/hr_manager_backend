@@ -16,6 +16,9 @@ model User {
   posto           String?
   email           String?       @unique
   password        String?
+  digit           String?
+  pelotao         String?
+  Workplace       String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt  @default(now())
   role            Role        @default(USER)
@@ -205,6 +208,7 @@ model ProfileWeapons {
   updatedAt                 DateTime @updatedAt @default(now())
   belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
   belongsToWeapons          Weapons              @relation(fields: [belongsToWeaponsId], references: [id])
+  belongsToAmunnition       Ammunition           @relation(fields: [belongsToAmmunitionId], references: [id])
 
 }
 
@@ -337,4 +341,17 @@ model FuelSupply {
   vehicleId  String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model Ammunition {
+  id             Int      @id @default(autoincrement())
+  caliber        String?
+  quantity       Int?
+  lote           String?
+  localization   String?
+  expiration     DateTime?
+  status         Int?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ProfileWeapons ProfileWeapons[]
 }
