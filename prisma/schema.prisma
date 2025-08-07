@@ -209,7 +209,7 @@ model ProfileWeapons {
   updatedAt                 DateTime @updatedAt @default(now())
   belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
   belongsToWeapons          Weapons              @relation(fields: [belongsToWeaponsId], references: [id])
-  belongsToAmunnition       Ammunition           @relation(fields: [belongsToAmmunitionId], references: [id])
+  // belongsToAmunnition       Ammunition           @relation(fields: [belongsToAmmunitionId], references: [id])
 
 }
 
@@ -345,18 +345,18 @@ model FuelSupply {
   updatedAt  DateTime @updatedAt
 }
 
-model Ammunition {
-  id             Int      @id @default(autoincrement())
-  caliber        String?
-  quantity       Int?
-  lote           String?
-  localization   String?
-  expiration     DateTime?
-  status         Int?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  ProfileWeapons ProfileWeapons[]
-}
+// model Ammunition {
+//   id             Int      @id @default(autoincrement())
+//   caliber        String?
+//   quantity       Int?
+//   lote           String?
+//   localization   String?
+//   expiration     DateTime?
+//   status         Int?
+//   createdAt      DateTime @default(now())
+//   updatedAt      DateTime @updatedAt
+//   ProfileWeapons ProfileWeapons[]
+// }
 
 model Vehicle {
   id          Int      @id @default(autoincrement())
