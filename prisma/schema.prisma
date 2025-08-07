@@ -337,9 +337,10 @@ model WeaponBrand {
 model FuelSupply {
   id         Int      @id @default(autoincrement())
   date       DateTime
-  quantity   Float
-  fuelType   String
-  vehicleId  String
+  mat        String?
+  quantity   Float?
+  fuelType   String?
+  vehicleId  String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -355,4 +356,17 @@ model Ammunition {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   ProfileWeapons ProfileWeapons[]
+}
+
+model Vehicle {
+  id          Int      @id @default(autoincrement())
+  plate       String   @unique
+  model       String?
+  brand       String?
+  year        Int?
+  prefix      String?
+  status      Boolean?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
 }
