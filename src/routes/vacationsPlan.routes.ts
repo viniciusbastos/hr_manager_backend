@@ -71,7 +71,7 @@ vacationPlanRouter.get('/vacationsplan/:phone', async (req, res) => {
         ELSE 'Mês inválido' -- Caso o número não esteja entre 1 e 12
     END AS opcaoOne,
     CASE "optionTwo"
-        WHEN 1 THEN 'Janeiro de 2026'
+        WHEN 1 THEN 'Janeiro'
         WHEN 2 THEN 'Fevereiro'
         WHEN 3 THEN 'Março'
         WHEN 4 THEN 'Abril'
@@ -104,7 +104,7 @@ vacationPlanRouter.get('/vacationsplan', async (req, res) => {
     "User"."name",
     "VacationPlan"."phone",
     CASE "optionOne"
-        WHEN 1 THEN 'Janeiro 2026'
+        WHEN 1 THEN 'Janeiro'
         WHEN 2 THEN 'Fevereiro'
         WHEN 3 THEN 'Março'
         WHEN 4 THEN 'Abril'
@@ -170,12 +170,17 @@ vacationPlanRouter.get('/vacation/users/1', async (req, res, next) => {
 })
 
 vacationPlanRouter.delete(
-  '/vacations/:id',
+  '/vacationsplan/:id',
   async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
     const axios = require('axios')
+    const user = await prisma.vacationPlan.findUnique({
+      where: {
+        id: parseInt(req.params.id)
+      }
+    })
     let data = {
-      number: '557592313592',
-      text: 'teste de envio'
+      number: user?.phone,
+      text: 'Sua solicitação de férias foi cancelada, por favor entre em contato com o RH para mais informações.'
     }
 
     let config = {
@@ -198,9 +203,9 @@ vacationPlanRouter.delete(
       })
 
     try {
-      const deleted = await prisma.vacation.delete({
+      const deleted = await prisma.vacationPlan.delete({
         where: {
-          id: req.params.id
+          id: parseInt(req.params.id)
         }
       })
       res.status(204).json({ data: deleted })
