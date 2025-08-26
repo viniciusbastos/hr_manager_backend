@@ -172,7 +172,6 @@ vacationPlanRouter.get('/vacation/users/1', async (req, res, next) => {
 vacationPlanRouter.delete(
   '/vacations/:id',
   async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
-    console.log(req.user)
     const axios = require('axios')
     let data = {
       number: '5575992313592',
