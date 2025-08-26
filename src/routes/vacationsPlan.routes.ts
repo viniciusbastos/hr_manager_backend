@@ -174,7 +174,7 @@ vacationPlanRouter.delete(
   async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
     const axios = require('axios')
     let data = {
-      number: '5575992313592',
+      number: '557592313592',
       text: 'teste de envio'
     }
 
