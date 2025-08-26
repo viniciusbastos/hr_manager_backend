@@ -182,33 +182,33 @@ vacationPlanRouter.delete(
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: 'http://evo-lk008co0wocs40wcgcwcsosc.49.13.196.55.sslip.io/message/sendText/Whast',
+      url: 'https://evolution.bastosdev.xyz/message/sendText/6CIPM',
       headers: {
-        apikey: '273657F3FF14-4D2E-A5A3-0A047A51138E'
+        apikey: 'F1DCB3AAF2AB-4B97-A2C8-6361FAB9681F'
       },
       data: data
     }
 
-    // axios
-    //   .request(config)
-    //   .then(response => {
-    //     console.log(JSON.stringify(response.data))
-    //   })
-    //   .catch(error => {
-    //     console.log(error)
-    //   })
+    axios
+      .request(config)
+      .then(response => {
+        console.log(JSON.stringify(response.data))
+      })
+      .catch(error => {
+        console.log(error)
+      })
 
-    // try {
-    //   const deleted = await prisma.vacation.delete({
-    //     where: {
-    //       id: req.params.id
-    //     }
-    //   })
-    //   res.status(204).json({ data: deleted })
-    // } catch (e) {
-    //   res.status(400)
-    //   res.json({ message: 'error' })
-    // }
+    try {
+      const deleted = await prisma.vacation.delete({
+        where: {
+          id: req.params.id
+        }
+      })
+      res.status(204).json({ data: deleted })
+    } catch (e) {
+      res.status(400)
+      res.json({ message: 'error' })
+    }
   }
 )
 
