@@ -3,6 +3,7 @@ import { body } from 'express-validator'
 import { handleInputErrors } from '../modules/middleware'
 import { deleteVacation } from '../handlers/vacationHadlers'
 import { Prisma } from '@prisma/client'
+import { MessageService } from '../services/messageService'
 
 const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
@@ -172,46 +173,36 @@ vacationPlanRouter.get('/vacation/users/1', async (req, res, next) => {
 vacationPlanRouter.delete(
   '/vacationsplan/:id',
   async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
-    const axios = require('axios')
-    const user = await prisma.vacationPlan.findUnique({
-      where: {
-        id: parseInt(req.params.id)
-      }
-    })
-    let data = {
-      number: user?.phone,
-      text: 'Sua solicitação de férias foi cancelada, por favor entre em contato com o RH para mais informações.'
-    }
-
-    let config = {
-      method: 'post',
-      maxBodyLength: Infinity,
-      url: 'https://evolution.bastosdev.xyz/message/sendText/6CIPM',
-      headers: {
-        apikey: 'F1DCB3AAF2AB-4B97-A2C8-6361FAB9681F'
-      },
-      data: data
-    }
-
-    axios
-      .request(config)
-      .then(response => {
-        console.log(JSON.stringify(response.data))
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    const messageService = new MessageService()
 
     try {
+      const user = await prisma.vacationPlan.findUnique({
+        where: {
+          id: parseInt(req.params.id)
+        }
+      })
+
+      if (!user) {
+        return res.status(404).json({ message: 'Vacation plan not found' })
+      }
+
+      // Send cancellation message
+      await messageService.sendMessage({
+        number: user?.phone,
+        text: 'Sua solicitação de férias foi cancelada, por favor entre em contato com o RH para mais informações.'
+      })
+
+      // Delete vacation plan
       const deleted = await prisma.vacationPlan.delete({
         where: {
           id: parseInt(req.params.id)
         }
       })
+
       res.status(204).json({ data: deleted })
-    } catch (e) {
-      res.status(400)
-      res.json({ message: 'error' })
+    } catch (error) {
+      console.error('Operation failed:', error)
+      res.status(500).json({ message: 'Internal server error' })
     }
   }
 )
