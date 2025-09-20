@@ -1,41 +1,29 @@
 import express from 'express'
-import router from './router'
+import router from './router.js'
+import { PrismaClient } from '@prisma/client'
 
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient({
-  log: [
-    {
-      emit: 'event',
-      level: 'query'
-    },
-    {
-      emit: 'stdout',
-      level: 'error'
-    },
-    {
-      emit: 'stdout',
-      level: 'info'
-    },
-    {
-      emit: 'stdout',
-      level: 'warn'
-    }
-  ]
-})
 const app = express()
 import cors from 'cors'
 import morgan from 'morgan'
-import { protect } from './modules/auth'
-import { createUser, signin } from './handlers/userHandlers'
-import usersRouter from './routes/users.routes'
-import vacationRouter from './routes/vacations.routes'
-import sicknoteRouter from './routes/sicknote.routes'
-import weaponsRouter from './routes/weapons.routes'
-import adminMiddleware from './middleware/admins.middleware'
-import { auditLog } from './middleware/auditlog.middleware'
-import uploadRouter from './testes3'
-import vacationPlanRouter from './routes/vacationsPlan.routes'
-import auditLogsnoteRouter from './routes/auditlogs.routes'
+import { protect } from './modules/auth.js'
+import { createUser, signin } from './handlers/userHandlers.js'
+import usersRouter from './routes/users.routes.js'
+import vacationRouter from './routes/vacations.routes.js'
+import sicknoteRouter from './routes/sicknote.routes.js'
+import weaponsRouter from './routes/weapons.routes.js'
+import adminMiddleware from './middleware/admins.middleware.js'
+import { auditLog } from './middleware/auditlog.middleware.js'
+import vacationPlanRouter from './routes/vacationsPlan.routes.js'
+import auditLogsnoteRouter from './routes/auditlogs.routes.js'
+import pino from 'pino'
+import { Redis } from 'iovalkey'
+
+import {
+  CacheCase,
+  PrismaExtensionRedis,
+  type AutoCacheConfig,
+  type CacheConfig
+} from 'prisma-extension-redis'
 // import whatsappRouter from './routes/whatsapp.routes'
 
 app.use(morgan('dev'))
@@ -44,9 +32,6 @@ app.use(express.urlencoded({ extended: true }))
 
 // 👇️ specify origins to allow
 const whitelist = ['https://app.bastosdev.xyz', 'http://localhost:4173']
-
-// ✅ Enable pre-flight requests
-app.options('*', cors())
 
 const corsOptions = {
   credentials: true,
@@ -58,6 +43,9 @@ const corsOptions = {
     }
   }
 }
+
+// ✅ Enable pre-flight requests with same options
+app.options('*', cors(corsOptions))
 
 app.use(cors(corsOptions))
 
@@ -71,7 +59,6 @@ app.use('/api', protect, [adminMiddleware, auditLog], vacationRouter)
 app.use('/api', protect, [adminMiddleware, auditLog], sicknoteRouter)
 app.use('/api', protect, [adminMiddleware, auditLog], weaponsRouter)
 app.use('/api', protect, [adminMiddleware, auditLog], vacationPlanRouter)
-app.use('/api', uploadRouter)
 // app.use('/api', whatsappRouter)
 
 app.use((err: any, req: any, res: any, next: any) => {

@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.16",
@@ -16,11 +17,13 @@
     "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.2.2"
+    "tsx": "^4.7.0",
+    "typescript": "^5.2.2",
+    "@types/node": "^20.8.10"
   },
   "scripts": {
     "test": "jest --passWithNoTests",
-    "dev": "nodemon  src/index.ts",
+    "dev": "nodemon --exec tsx src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js"
   },
@@ -46,7 +49,8 @@
     "pdf-parse": "^1.1.1",
     "pdfkit": "^0.16.0",
     "pino": "^9.5.0",
-    "qrcode-terminal": "^0.12.0",
-    "uuid": "^11.0.3"
+    "redis": "^5.8.2",
+    "uuid": "^11.0.3",
+    "node-fetch": "^3.3.2"
   }
 }

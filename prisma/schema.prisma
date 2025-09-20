@@ -10,32 +10,28 @@ datasource db {
 }
 
 model User {
-  id              String        @id @default(uuid())
-  mat             String?       @unique @db.Char(8)
-  name            String?
-  posto           String?
-  email           String?       @unique
-  password        String?
-  digit           String?
-  pelotao         String?
-  Workplace       String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt  @default(now())
-  role            Role        @default(USER)
-  Appointment     Appointment[]
-  Course          Course[]
-  profile         Profile[]
-  Sicknote        Sicknote[]
-  Vacation        Vacation[]
-  Profileunidade  Profileunidade[]
-  AuditLog        AuditLog[]
-  ProfileWeapons   ProfileWeapons[]
-
+  id             String           @id @default(uuid())
+  mat            String?          @unique @db.Char(8)
+  name           String
+  createdAt      DateTime         @default(now())
+  posto          String?
+  email          String?          @unique
+  password       String?
+  role           Role             @default(USER)
+  updatedAt      DateTime         @default(now()) @updatedAt
+  AuditLog       AuditLog[]
+  Course         Course[]
+  profile        Profile[]
+  ProfileWeapons ProfileWeapons[]
+  Profileunidade Profileunidade[]
+  Sicknote       Sicknote[]
+  Vacation       Vacation[]
 }
 
 model Vacation {
   period      String?
   approved    Boolean?  @default(false)
+  createdAt   DateTime  @default(now())
   belongsToId String
   finishAt    DateTime?
   startAt     DateTime?
@@ -43,8 +39,7 @@ model Vacation {
   month       Int
   id          String    @id @default(uuid())
   bioId       String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime @updatedAt @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
   belongsTo   User      @relation(fields: [belongsToId], references: [id])
   bio         Bio?      @relation(fields: [bioId], references: [id])
 }
@@ -54,14 +49,14 @@ model Sicknote {
   InitialDate DateTime
   Days        Int?
   Cid         String?
-  DoctorName  String?
   Obs         String?
+  createdAt   DateTime @default(now())
   belongsToId String
   bioId       String?
+  DoctorName  String?
   crm         String?
+  updatedAt   DateTime @default(now()) @updatedAt
   url         String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime @updatedAt @default(now())
   belongsTo   User     @relation(fields: [belongsToId], references: [id])
   bio         Bio?     @relation(fields: [bioId], references: [id])
 }
@@ -70,18 +65,16 @@ model Profile {
   id           Int       @id @default(autoincrement())
   bio          String?
   photo        String?
-  adress       String?
+  address      String
   neighborhood String?
   city         String?
-  phone        String?
+  phone        String
   state        String?
   cpf          String?
   serviceTime  DateTime? @db.Date
   workplace    String?
   belongsToId  String
   bithDate     DateTime? @db.Date
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt @default(now())
   belongsTo    User      @relation(fields: [belongsToId], references: [id])
 }
 
@@ -91,163 +84,150 @@ model Course {
   FinalDate   DateTime
   name        String?
   progress    Boolean  @default(false)
+  createdAt   DateTime @default(now())
   belongsToId String
   bioId       String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime @updatedAt @default(now())
   belongsTo   User     @relation(fields: [belongsToId], references: [id])
   bio         Bio?     @relation(fields: [bioId], references: [id])
 }
 
 model Bio {
-  id          String        @id @default(uuid())
-  Number      Int?
-  Year        Int?
-  Month       Int?
+  id          String     @id @default("nextval('\"Bio_id_seq\"'::regclass)")
   InitialDate DateTime   @db.Date
   FinalDate   DateTime   @db.Date
   name        String
   progress    Boolean    @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime @updatedAt @default(now())
+  createdAt   DateTime   @default(now())
+  Month       Int?
+  Number      Int?
+  Year        Int?
   type        String?
   Course      Course[]
   Sicknote    Sicknote[]
   Vacation    Vacation[]
 }
 
-model Appointment {
-  id                        Int                  @id @default(autoincrement())
-  Date                      DateTime             @db.Date
-  Service                   String
-  progress                  Boolean              @default(false)
-  belongsToId               String
-  belongsToProffessionalsId Int?
-  Specialities              String
-  createdAt                 DateTime  @default(now())
-  updatedAt                 DateTime @updatedAt @default(now())
-  belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
-  belongsToProfessionals    HealthProfessionals? @relation(fields: [belongsToProffessionalsId], references: [id])
-}
-
 model HealthProfessionals {
-  id           Int           @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   Service      String
+  createdAt    DateTime @default(now())
   Specialities String[]
-  BirthDate    DateTime      @db.Date
+  BirthDate    DateTime @db.Date
   Name         String
-  createdAt    DateTime  @default(now())
-  updatedAt DateTime @updatedAt @default(now())
-  Appointment  Appointment[]
 }
 
 model Unidades {
-  id              Int           @id @default(autoincrement())
-  name            String?
-  location        String? 
-  cidades         String[]
-  aisp            String[]
-  risp            String? 
-  createdAt    DateTime  @default(now())
-  updatedAt DateTime @updatedAt @default(now())
-  Profileunidade  Profileunidade[]
+  id             Int              @id @default(autoincrement())
+  name           String?
+  location       String?
+  cidades        String[]
+  risp           String?
+  aisp           String[]
+  Profileunidade Profileunidade[]
 }
 
 model Profileunidade {
-  id           Int           @id @default(autoincrement())
-  belongsToId               String
-  belongsToUnidadeId        Int
-  createdAt                 DateTime  @default(now())
-  updatedAt                 DateTime @updatedAt @default(now())
-  belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
-  belongsToUnidade          Unidades             @relation(fields: [belongsToUnidadeId], references: [id])
-
+  id                 Int      @id @default(autoincrement())
+  belongsToId        String
+  belongsToUnidadeId Int
+  belongsTo          User     @relation(fields: [belongsToId], references: [id])
+  belongsToUnidade   Unidades @relation(fields: [belongsToUnidadeId], references: [id])
 }
 
 model AuditLog {
-  id                       Int       @id @default(autoincrement())
-  action                   String
-  model                    String
-  modelId                  Int
-  belongsToId              String
-  ipAdress                 String
-  createdAt                DateTime  @default(now())
-  updatedAt                DateTime @updatedAt @default(now())
+  id          Int       @id @default(autoincrement())
+  action      String
+  model       String
+  modelId     Int
+  belongsToId String
+  createdAt   DateTime  @default(now())
+  ipAdress    String
+  updatedAt   DateTime? @default(now()) @updatedAt
+  belongsTo   User      @relation(fields: [belongsToId], references: [id])
+}
 
-  belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
+model Weapons {
+  id           Int       @id @default(autoincrement())
+  model        String?
+  serialNumber String?
+  createdAt    DateTime  @default(now())
+  type         Int?
+  location     Int?
+  caliber      Int?
+  status       Int?
+  updatedAt    DateTime? @default(now()) @updatedAt
+  brand        Int?
+}
+
+model ProfileWeapons {
+  id                 Int       @id @default(autoincrement())
+  belongsToId        String
+  belongsToWeaponsId Int
+  InitialDate        DateTime  @db.Date
+  discharge          Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime? @default(now()) @updatedAt
+  belongsTo          User      @relation(fields: [belongsToId], references: [id])
+}
+
+model WeaponType {
+  id        Int      @id @default(autoincrement())
+  type      String
+  createdAt DateTime @default(now())
+}
+
+model WeaponLocation {
+  id        Int      @id @default(autoincrement())
+  location  String
+  createdAt DateTime @default(now())
+}
+
+model WeaponStatus {
+  id        Int      @id @default(autoincrement())
+  Status    Status   @default(EM_CONDICOES_DE_USO)
+  createdAt DateTime @default(now())
+}
+
+model WeaponCaliber {
+  id        Int      @id @default(autoincrement())
+  Caliber   Caliber  @default(CALIBRE_40)
+  createdAt DateTime @default(now())
+}
+
+model Drivers {
+  id              Int      @id @default(autoincrement())
+  matricula       String   @unique
+  driverLicense   String   @unique
+  category        String
+  licenseValidity DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+}
+
+model VacationPlan {
+  id        Int      @id @default(autoincrement())
+  mat       String?
+  optionOne Int?
+  optionTwo Int?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  pelotao   Int?
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model WeaponBrand {
+  id        Int  @id @default(autoincrement())
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  @@map("WeaponBrand")
 }
 
 enum Role {
   USER
   ADMIN
   GUEST
-}
-
-model Weapons {
-  id              Int           @id @default(autoincrement())
-  model           String?
-  type            Int?
-  serialNumber    String?
-  location        Int?
-  status          Int?
-  caliber         Int?
-  brand           Int?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime @updatedAt @default(now())
-  ProfileWeapons   ProfileWeapons[]
-}
-
-
-model ProfileWeapons {
-  id                        Int                  @id @default(autoincrement())
-  belongsToId               String
-  belongsToWeaponsId        Int
-  //belongsToAmmunitionId     Int
-  InitialDate               DateTime             @db.Date
-  discharge                 Boolean              @default(false)
-  createdAt                 DateTime  @default(now())
-  updatedAt                 DateTime @updatedAt @default(now())
-  belongsTo                 User                 @relation(fields: [belongsToId], references: [id])
-  belongsToWeapons          Weapons              @relation(fields: [belongsToWeaponsId], references: [id])
-  // belongsToAmunnition       Ammunition           @relation(fields: [belongsToAmmunitionId], references: [id])
-
-}
-
-model UploadedFile {
-  id           Int      @id @default(autoincrement())
-  fileName     String   // Generated unique filename
-  originalName String   // Original filename
-  mimetype     String   // MIME type of the file
-  size         Int      // File size in bytes
-  s3Key        String   // S3 object key
-  s3Bucket     String   // S3 bucket name
-  uploadedAt   DateTime @default(now())
-  createdAt    DateTime  @default(now())
-  updatedAt DateTime @updatedAt @default(now())
-}
-
-model WeaponType {
-  id           Int      @id @default(autoincrement())
-  type         String   // Generated unique filename
-  createdAt    DateTime  @default(now())
-  updatedAt DateTime @updatedAt @default(now())
-
-}
-
-model WeaponLocation {
-  id           Int      @id @default(autoincrement())
-  location     String   // Generated unique filename
-  createdAt    DateTime  @default(now())
-  updatedAt DateTime @updatedAt @default(now())
-
-}
-
-model WeaponStatus {
-  id           Int      @id @default(autoincrement())
-  Status       Status    @default(EM_CONDICOES_DE_USO) // Generated unique filename
-  createdAt    DateTime  @default(now())
-  updatedAt DateTime @updatedAt @default(now())
-
 }
 
 enum Status {
@@ -266,16 +246,6 @@ enum Status {
   NAO_LOCALIZADA
   EM_PERICIA
   A_DISPOSICAO_DA_JUSTICA
-
-
-}
-
-model WeaponCaliber {
-  id           Int      @id @default(autoincrement())
-  Caliber      Caliber    @default(CALIBRE_40) // Generated unique filename
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime @updatedAt @default(now())
-
 }
 
 enum Caliber {
@@ -287,86 +257,12 @@ enum Caliber {
   CALIBRE_380
   CALIBRE_9
   CALIBRE_762
-  CALIBRE_556
-  CALIBRE_765
   CALIBRE_50
   CALIBRE_22
   CALIBRE_223
   CALIBRE_30
   CALIBRE_20
   CALIBRE_12
-}
-
-model Drivers {
-  id               Int      @id @default(autoincrement())
-  matricula        String   @unique// Generated unique filename
-  driverLicense    String   @unique
-  category         String  
-  licenseValidity  DateTime
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime @updatedAt @default(now())
-
-}
-
-model VacationPlan {
-  id          Int      @id @default(autoincrement())
-  mat         String
-  optionOne   Int
-  optionTwo   Int
-  phone       String
-  pelotao     Int?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime @updatedAt @default(now())
-}
-
-model Posto {
-  id               Int      @id @default(autoincrement())
-  nome             String    
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime @updatedAt @default(now())
-
-}
-model WeaponBrand {
-  id           Int      @id @default(autoincrement())
-  name         String  
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime @updatedAt @default(now())
-
-}
-
-model FuelSupply {
-  id         Int      @id @default(autoincrement())
-  date       DateTime
-  mat        String?
-  quantity   Float?
-  fuelType   String?
-  vehicleId  String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-// model Ammunition {
-//   id             Int      @id @default(autoincrement())
-//   caliber        String?
-//   quantity       Int?
-//   lote           String?
-//   localization   String?
-//   expiration     DateTime?
-//   status         Int?
-//   createdAt      DateTime @default(now())
-//   updatedAt      DateTime @updatedAt
-//   ProfileWeapons ProfileWeapons[]
-// }
-
-model Vehicle {
-  id          Int      @id @default(autoincrement())
-  plate       String?   @unique
-  model       String?
-  brand       String?
-  year        Int?
-  prefix      String?
-  status      Boolean?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  CALIBRE_556
+  CALIBRE_765
 }

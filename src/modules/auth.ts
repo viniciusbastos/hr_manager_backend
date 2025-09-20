@@ -16,6 +16,7 @@ export const createJWT = (user: {
   name: string
   posto: string
   phone: string
+  permissions: string
 }) => {
   let sec: string = process.env.JWT_SECRET as string
 
@@ -26,7 +27,8 @@ export const createJWT = (user: {
       role: user.role,
       name: user.name,
       posto: user.posto,
-      phone: user.phone
+      phone: user.phone,
+      permissions: user.permissions
     },
     sec,
     { expiresIn: '30d' }

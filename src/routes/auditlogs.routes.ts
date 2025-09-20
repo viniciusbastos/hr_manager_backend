@@ -1,13 +1,13 @@
 import { Router } from 'express'
 import { url } from 'inspector'
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+import prisma from '../db.js'
+import extendedPrisma from '../db.js'
 
 const auditLogsnoteRouter = Router()
 
 auditLogsnoteRouter.post('/audit-logs', async (req, res) => {
   const { action, model, modelId, belongsToId, ipAdress } = req.body
-  const auditLog = await prisma.auditLog.create({
+  const auditLog = await extendedPrisma.auditLog.create({
     data: {
       action,
       model,
@@ -21,14 +21,14 @@ auditLogsnoteRouter.post('/audit-logs', async (req, res) => {
 
 // Read all audit logs
 auditLogsnoteRouter.get('/audit-logs', async (req, res) => {
-  const auditLogs = await prisma.auditLog.findMany()
+  const auditLogs = await extendedPrisma.auditLog.findMany()
   res.json(auditLogs)
 })
 
 // Read a single audit log by ID
 auditLogsnoteRouter.get('/audit-logs/:id', async (req, res) => {
   const { id } = req.params
-  const auditLog = await prisma.auditLog.findUnique({
+  const auditLog = await extendedPrisma.auditLog.findUnique({
     where: { id: parseInt(id) }
   })
   res.json(auditLog)
@@ -38,7 +38,7 @@ auditLogsnoteRouter.get('/audit-logs/:id', async (req, res) => {
 auditLogsnoteRouter.put('/audit-logs/:id', async (req, res) => {
   const { id } = req.params
   const { action, model, modelId, belongsToId, ipAdress } = req.body
-  const auditLog = await prisma.auditLog.update({
+  const auditLog = await extendedPrisma.auditLog.update({
     where: { id: parseInt(id) },
     data: {
       action,
@@ -53,7 +53,7 @@ auditLogsnoteRouter.put('/audit-logs/:id', async (req, res) => {
 
 auditLogsnoteRouter.delete('/audit-logs/:id', async (req, res) => {
   const { id } = req.params
-  await prisma.auditLog.delete({
+  await extendedPrisma.auditLog.delete({
     where: { id: parseInt(id) }
   })
   res.json({ message: 'Audit log deleted' })

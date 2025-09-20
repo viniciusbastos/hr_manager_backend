@@ -1,8 +1,18 @@
-import { Profile } from './../../node_modules/.prisma/client/index.d'
-import { comparePasswords, createJWT, hashPassword } from './../modules/auth'
-import prisma from '../db'
+import { Profile } from '@prisma/client'
+import { comparePasswords, createJWT, hashPassword } from './../modules/auth.js'
+import prisma from '../db.js'
 import { Request, Response } from 'express'
 import bcrypt from 'bcrypt'
+
+interface User {
+  id: string
+  email: string
+  role: string
+  name: string
+  posto: string
+  phone: string
+  permissions: string
+}
 
 export const createUser = async (req: any, res: any, next: any) => {
   try {
@@ -13,7 +23,7 @@ export const createUser = async (req: any, res: any, next: any) => {
         name: req.body.name,
         posto: req.body.posto,
         mat: req.body.mat,
-        useremail: req.body.email,
+        email: req.body.email,
 
         Profileunidade: {
           create: {
@@ -22,7 +32,7 @@ export const createUser = async (req: any, res: any, next: any) => {
         }
       }
     })
-    const token = createJWT(user)
+    const token = createJWT({ ...user, phone: '', permissions: 'USER' })
     res.json({ token: token })
   } catch (error: any) {
     if (error.response) {
@@ -53,11 +63,12 @@ export const signin = async (req: Request, res: Response) => {
       }
     }
   })
-  const id = req.body.id
-  const useremail = req.body.email
-  const role = req.body.role
-  const name = req.body.name
-  const posto = req.body.role
+  if (!user) {
+    return res.status(401).json({ message: 'Invalid email or password' })
+  }
+  const phone = user.profile?.[0]?.phone || ''
+  const permissions = 'ADMIN'
+  const userPermissions = { ...user, phone, permissions }
   const isValid = async (plainPassword: string, hashedPassword: string): Promise<boolean> => {
     return bcrypt.compare(plainPassword, hashedPassword)
   }
@@ -67,8 +78,8 @@ export const signin = async (req: Request, res: Response) => {
     return
   }
 
-  const token = createJWT(user)
-  console.log(user)
+  const token = createJWT(userPermissions)
+  console.log(userPermissions)
   res.json({ token })
 }
 

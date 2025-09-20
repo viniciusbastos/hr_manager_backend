@@ -2,9 +2,8 @@ import { Router } from 'express'
 import { body } from 'express-validator'
 import { handleInputErrors } from './modules/middleware'
 import { deleteVacation } from './handlers/vacationHadlers'
+import prisma from './db'
 
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
 const router = Router()
 
 router.get('/efetivo', async (req, res) => {
@@ -79,17 +78,17 @@ router.get('/appointments', async (req, res, next) => {
   }
 })
 
-router.post('/appointment', handleInputErrors, async (req, res) => {
-  const appointment = await prisma.appointment.create({
-    data: {
-      Service: req.body.Service,
-      Specialities: req.body.Specialities,
-      Date: new Date(req.body.Date),
-      belongsToId: req.body.belongsToId,
-      progress: req.body.progress
-    }
-  })
-  return res.sendStatus(200)
-})
+// router.post('/appointment', handleInputErrors, async (req, res) => {
+//   const appointment = await prisma.appointment.create({
+//     data: {
+//       Service: req.body.Service,
+//       Specialities: req.body.Specialities,
+//       Date: new Date(req.body.Date),
+//       belongsToId: req.body.belongsToId,
+//       progress: req.body.progress
+//     }
+//   })
+//   return res.sendStatus(200)
+// })
 
 export default router

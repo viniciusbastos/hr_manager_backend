@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import { body } from 'express-validator'
-import { handleInputErrors } from '../modules/middleware'
-import { deleteVacation } from '../handlers/vacationHadlers'
-import { Prisma } from '@prisma/client'
-import { MessageService } from '../services/messageService'
+import { handleInputErrors } from '../modules/middleware.js'
+import { deleteVacation } from '../handlers/vacationHadlers.js'
+import { Prisma, PrismaClient } from '@prisma/client'
+import { MessageService } from '../services/messageService.js'
 
-const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 const vacationPlanRouter = Router()
 export interface IGetUserAuthInfoRequest extends Request {
