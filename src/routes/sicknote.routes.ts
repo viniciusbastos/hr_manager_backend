@@ -2,8 +2,7 @@ import { Router } from 'express'
 import { body } from 'express-validator'
 import { handleInputErrors } from '../modules/middleware'
 import { url } from 'inspector'
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+import prisma from '../db'
 const sicknoteRouter = Router()
 
 //Atestados Médicos

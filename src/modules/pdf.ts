@@ -40,7 +40,6 @@ export class WeaponRequestPDF {
 
   constructor(weapon: WeaponData) {
     this.weapon = weapon
-    console.log(weapon)
     this.doc = new PDFDocument({ size: 'A4', margin: 50 })
     this.doc.initForm()
   }

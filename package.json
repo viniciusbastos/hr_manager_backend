@@ -46,7 +46,9 @@
     "pdf-parse": "^1.1.1",
     "pdfkit": "^0.16.0",
     "pino": "^9.5.0",
+    "prisma-extension-redis": "^2.1.1",
     "qrcode-terminal": "^0.12.0",
+    "redis": "^5.8.2",
     "uuid": "^11.0.3"
   }
 }

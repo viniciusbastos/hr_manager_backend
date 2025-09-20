@@ -2,26 +2,7 @@ import express from 'express'
 import router from './router'
 
 const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient({
-  log: [
-    {
-      emit: 'event',
-      level: 'query'
-    },
-    {
-      emit: 'stdout',
-      level: 'error'
-    },
-    {
-      emit: 'stdout',
-      level: 'info'
-    },
-    {
-      emit: 'stdout',
-      level: 'warn'
-    }
-  ]
-})
+
 const app = express()
 import cors from 'cors'
 import morgan from 'morgan'
@@ -33,9 +14,17 @@ import sicknoteRouter from './routes/sicknote.routes'
 import weaponsRouter from './routes/weapons.routes'
 import adminMiddleware from './middleware/admins.middleware'
 import { auditLog } from './middleware/auditlog.middleware'
-import uploadRouter from './testes3'
 import vacationPlanRouter from './routes/vacationsPlan.routes'
 import auditLogsnoteRouter from './routes/auditlogs.routes'
+import pino from 'pino'
+import { Redis } from 'iovalkey'
+
+import {
+  CacheCase,
+  PrismaExtensionRedis,
+  type AutoCacheConfig,
+  type CacheConfig
+} from 'prisma-extension-redis'
 // import whatsappRouter from './routes/whatsapp.routes'
 
 app.use(morgan('dev'))
@@ -71,7 +60,6 @@ app.use('/api', protect, [adminMiddleware, auditLog], vacationRouter)
 app.use('/api', protect, [adminMiddleware, auditLog], sicknoteRouter)
 app.use('/api', protect, [adminMiddleware, auditLog], weaponsRouter)
 app.use('/api', protect, [adminMiddleware, auditLog], vacationPlanRouter)
-app.use('/api', uploadRouter)
 // app.use('/api', whatsappRouter)
 
 app.use((err: any, req: any, res: any, next: any) => {

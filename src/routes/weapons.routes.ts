@@ -8,95 +8,124 @@ import { request } from 'http'
 import {
   newWeapons,
   showWeapons,
+  showWeapon,
   updateProfileWeapon,
-  updateProfileWeaponAndLocation
+  updateProfileWeaponAndLocation,
+  weaponEdit
 } from '../controllers/weapons.controllers'
-import { WeaponRequestPDF } from '../modules/pdf'
-import path from 'path'
-import { json } from 'stream/consumers'
-import sendDocumentToNumber from '../modules/sendDocument'
 
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+import extendedPrisma from '../db'
+import prisma from '../db'
+import { WeaponRequestPDF } from '../modules/pdf'
+
 const weaponsRouter = Router()
 
 weaponsRouter.get('/weapons', showWeapons)
+weaponsRouter.get('/showweaponsbyid/:id', showWeapon)
 weaponsRouter.post('/newWeapons', newWeapons)
+weaponsRouter.put('/editweapon/:id', weaponEdit)
 
 weaponsRouter.get('/weapons/label', async (req, res) => {
-  const weapons: any = await prisma.$queryRaw`
-    SELECT 
-    "Weapons"."id" as value, 
-    "Weapons"."id"||' - ' ||"WeaponType"."type" || ' - ' || "Weapons"."model" ||' - '|| "Weapons"."serialNumber" as label 
-      FROM 
-          "Weapons"  
-      INNER JOIN
-          "WeaponType"
-      ON
-          "Weapons"."type" = "WeaponType"."id"
+  try {
+    const weapons: any = await extendedPrisma.$queryRaw`
+      SELECT
+      "Weapons"."id" as value,
+      "Weapons"."id"||' - ' ||"WeaponType"."type" || ' - ' || "Weapons"."model" ||' - '|| "Weapons"."serialNumber" as label
+        FROM
+            "Weapons"
+        INNER JOIN
+            "WeaponType"
+        ON
+            "Weapons"."type" = "WeaponType"."id"
 
-      WHERE 
-    "Weapons"."location" = 2 
-    AND "Weapons"."type" IN ('2', '5')
-    ORDER BY "Weapons"."id" ASC
-    `
+        WHERE
+      "Weapons"."location" = 2
+      AND "Weapons"."type" IN ('2', '5')
+      ORDER BY "Weapons"."id" ASC
+      `
 
-  res.json(weapons)
+    res.json(weapons)
+  } catch (error) {
+    console.error('Error fetching weapon labels:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
 })
 
 weaponsRouter.get('/weapons/fixed', async (req, res) => {
-  const weapons: any = await prisma.$queryRaw`
-    SELECT 
-	"User".mat, 
-    "User".posto, 
-    "User"."name", 
-    "Weapons".model, 
-    "Weapons"."serialNumber", 
+  try {
+    const weapons: any = await prisma.$queryRaw`
+      SELECT
+	"User".mat,
+    "User".posto,
+    "User"."name",
+    "Weapons".model,
+    "Weapons"."serialNumber",
     "WeaponType"."type" as "weaponType",
     "WeaponStatus"."Status",
     "WeaponCaliber"."Caliber",
     "WeaponLocation"."location",
-    "ProfileWeapons"."InitialDate", 
-    "ProfileWeapons"."discharge", 
+    "ProfileWeapons"."InitialDate",
+    "ProfileWeapons"."discharge",
     "ProfileWeapons"."id",
     "WeaponBrand"."name" as brand
-    FROM "ProfileWeapons"  
-    INNER JOIN "Weapons" 
-    ON 
-    "ProfileWeapons"."belongsToWeaponsId" = "Weapons".id 
-    INNER JOIN "User" 
-    ON "ProfileWeapons"."belongsToId" = "User".id 
-    INNER JOIN "WeaponBrand" 
+    FROM "ProfileWeapons"
+    INNER JOIN "Weapons"
+    ON
+    "ProfileWeapons"."belongsToWeaponsId" = "Weapons".id
+    INNER JOIN "User"
+    ON "ProfileWeapons"."belongsToId" = "User".id
+    INNER JOIN "WeaponBrand"
     ON "WeaponBrand".id = "Weapons".brand
-    INNER JOIN "WeaponType" ON "WeaponType"."id" = "Weapons"."type" 
-INNER JOIN "WeaponStatus" ON "WeaponStatus"."id" = "Weapons"."status" 
-INNER JOIN "WeaponCaliber" ON "WeaponCaliber"."id" = "Weapons"."caliber" 
+    INNER JOIN "WeaponType" ON "WeaponType"."id" = "Weapons"."type"
+INNER JOIN "WeaponStatus" ON "WeaponStatus"."id" = "Weapons"."status"
+INNER JOIN "WeaponCaliber" ON "WeaponCaliber"."id" = "Weapons"."caliber"
 INNER JOIN "WeaponLocation" ON "WeaponLocation"."id" = "Weapons"."location"
     WHERE "ProfileWeapons"."discharge" IS FALSE
     ORDER BY "ProfileWeapons"."InitialDate" Desc
 `
-  res.json(weapons)
+    console.log(weapons)
+    res.json(
+      JSON.parse(
+        JSON.stringify(weapons, (key, value) =>
+          typeof value === 'bigint' ? value.toString() : value
+        )
+      )
+    )
+  } catch (error) {
+    console.error('Error fetching fixed weapons:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
 })
 
 weaponsRouter.get('/weapons/info', async (req, res) => {
-  const weapons: any = await prisma.$queryRaw`
-  SELECT "Weapons".id, "Weapons".model, "Weapons"."serialNumber", "WeaponType"."type", "WeaponStatus"."Status", "WeaponCaliber"."Caliber", "WeaponLocation"."location" FROM "Weapons" 
-INNER JOIN "WeaponType" ON "WeaponType"."id" = "Weapons"."type" 
-INNER JOIN "WeaponStatus" ON "WeaponStatus"."id" = "Weapons"."status" 
-INNER JOIN "WeaponCaliber" ON "WeaponCaliber"."id" = "Weapons"."caliber" 
-INNER JOIN "WeaponLocation" ON "WeaponLocation"."id" = "Weapons"."location"
-ORDER BY "Weapons".id ASC`
+  try {
+    const weapons: any = await extendedPrisma.$queryRaw`
+    SELECT "Weapons".id, "Weapons".model, "Weapons"."serialNumber", "WeaponType"."type", "WeaponStatus"."Status", "WeaponCaliber"."Caliber", "WeaponLocation"."location" FROM "Weapons"
+  INNER JOIN "WeaponType" ON "WeaponType"."id" = "Weapons"."type"
+  INNER JOIN "WeaponStatus" ON "WeaponStatus"."id" = "Weapons"."status"
+  INNER JOIN "WeaponCaliber" ON "WeaponCaliber"."id" = "Weapons"."caliber"
+  INNER JOIN "WeaponLocation" ON "WeaponLocation"."id" = "Weapons"."location"
+  ORDER BY "Weapons".id ASC`
 
-  res.json(weapons)
+    res.json(weapons)
+  } catch (error) {
+    console.error('Error fetching weapon info:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
 })
 
 weaponsRouter.get('/weaponprofile/:id', async (req, res) => {
-  const id = parseInt(req.params.id)
-  const weapons: any =
-    await prisma.$queryRaw`SELECT "User".mat, "User".posto, "User"."name", "Weapons".model, "Weapons"."serialNumber", "ProfileWeapons"."InitialDate", "ProfileWeapons"."discharge", "ProfileWeapons"."id" 
-  FROM "ProfileWeapons"  INNER JOIN "Weapons" ON "ProfileWeapons"."belongsToWeaponsId" = "Weapons".id INNER JOIN "User" ON "ProfileWeapons"."belongsToId" = "User".id WHERE "ProfileWeapons"."id" = ${id}  ORDER BY "ProfileWeapons"."InitialDate" Desc`
+  try {
+    const id = parseInt(req.params.id)
+    const weapons: any =
+      await extendedPrisma.$queryRaw`SELECT "User".mat, "User".posto, "User"."name", "Weapons".model, "Weapons"."serialNumber", "ProfileWeapons"."InitialDate", "ProfileWeapons"."discharge", "ProfileWeapons"."id"
+    FROM "ProfileWeapons"  INNER JOIN "Weapons" ON "ProfileWeapons"."belongsToWeaponsId" = "Weapons".id INNER JOIN "User" ON "ProfileWeapons"."belongsToId" = "User".id WHERE "ProfileWeapons"."id" = ${id}  ORDER BY "ProfileWeapons"."InitialDate" Desc`
 
-  res.sendStatus(200).json({ weapons })
+    res.status(200).json({ weapons })
+  } catch (error) {
+    console.error('Error fetching weapon profile:', error)
+    res.status(500).json({ error: 'Internal server error' })
+  }
 })
 
 weaponsRouter.post('/weapons/fixed', async (req, res) => {
@@ -118,8 +147,8 @@ weaponsRouter.post('/weapons/fixed', async (req, res) => {
       }
     })
 
-    return [user, updateWeapon]
     console.log(updateWeapon)
+    return [user, updateWeapon]
   })
 
   return res.sendStatus(200)
@@ -222,32 +251,32 @@ weaponsRouter.post('/generate-pdf/:id', async (req, res) => {
   const fs = require('fs')
   const path = require('path')
   try {
-    const weaponData = await prisma.$queryRaw`
-      SELECT 
-        "User".mat, 
-        "User".posto, 
-        "User"."name", 
-        "Weapons".model, 
-        "Weapons"."serialNumber", 
+    const weaponData: any[] = await prisma.$queryRaw`
+      SELECT
+        "User".mat,
+        "User".posto,
+        "User"."name",
+        "Weapons".model,
+        "Weapons"."serialNumber",
         "WeaponType"."type" as "weaponType",
         "WeaponStatus"."Status",
         "WeaponCaliber"."Caliber",
         "WeaponLocation"."location",
-        "ProfileWeapons"."InitialDate", 
-        "ProfileWeapons"."discharge", 
+        "ProfileWeapons"."InitialDate",
+        "ProfileWeapons"."discharge",
         "ProfileWeapons"."id",
         "WeaponBrand"."name" as brand
-      FROM "ProfileWeapons"  
-      INNER JOIN "Weapons" 
-      ON 
-      "ProfileWeapons"."belongsToWeaponsId" = "Weapons".id 
-      INNER JOIN "User" 
-      ON "ProfileWeapons"."belongsToId" = "User".id 
-      INNER JOIN "WeaponBrand" 
+      FROM "ProfileWeapons"
+      INNER JOIN "Weapons"
+      ON
+      "ProfileWeapons"."belongsToWeaponsId" = "Weapons".id
+      INNER JOIN "User"
+      ON "ProfileWeapons"."belongsToId" = "User".id
+      INNER JOIN "WeaponBrand"
       ON "WeaponBrand".id = "Weapons".brand
-      INNER JOIN "WeaponType" ON "WeaponType"."id" = "Weapons"."type" 
-      INNER JOIN "WeaponStatus" ON "WeaponStatus"."id" = "Weapons"."status" 
-      INNER JOIN "WeaponCaliber" ON "WeaponCaliber"."id" = "Weapons"."caliber" 
+      INNER JOIN "WeaponType" ON "WeaponType"."id" = "Weapons"."type"
+      INNER JOIN "WeaponStatus" ON "WeaponStatus"."id" = "Weapons"."status"
+      INNER JOIN "WeaponCaliber" ON "WeaponCaliber"."id" = "Weapons"."caliber"
       INNER JOIN "WeaponLocation" ON "WeaponLocation"."id" = "Weapons"."location"
       WHERE "ProfileWeapons"."discharge" IS FALSE AND "ProfileWeapons"."id" = ${id}
       ORDER BY "ProfileWeapons"."InitialDate" DESC
@@ -257,12 +286,12 @@ weaponsRouter.post('/generate-pdf/:id', async (req, res) => {
       return res.status(404).json({ error: 'Weapon data not found' })
     }
 
-    const weaponDataJson = JSON.parse(JSON.stringify(weaponData[0])) // Get first result and parse
+    const weaponDataJson = weaponData[0] as any // Get first result
     console.log(weaponDataJson)
 
     // Create unique filename using timestamp
-    const fileName = await `weapon-request-${weaponDataJson.id}.pdf`
-    const outputPath = await path.join(__dirname, '../assets/', fileName)
+    const fileName = `weapon-request-${weaponDataJson.id}.pdf`
+    const outputPath = path.join(__dirname, '../assets/', fileName)
 
     // Generate PDF
 
@@ -306,9 +335,7 @@ weaponsRouter.post('/generate-pdf/:id', async (req, res) => {
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename="${fileName}"`
     })
-    await new Promise<void>((resolve, reject) => {
-      res.download(outputPath, fileName)
-    })
+    res.download(outputPath, fileName)
   } catch (error) {
     console.error('Error generating weapon request PDF:', error)
     return res.status(500).json({ error: 'Internal server error' })

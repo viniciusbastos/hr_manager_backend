@@ -2,9 +2,8 @@ import { NextFunction, Request, Response, Router } from 'express'
 import { body } from 'express-validator'
 import { handleInputErrors } from '../modules/middleware'
 import { deleteVacation } from '../handlers/vacationHadlers'
+import prisma from '../db'
 
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
 const vacationRouter = Router()
 export interface IGetUserAuthInfoRequest extends Request {
   user: {

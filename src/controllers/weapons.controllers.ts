@@ -2,18 +2,45 @@ import { Response, Request, RequestHandler } from 'express'
 import { body } from 'express-validator'
 import { createUser, deleteUser } from '../handlers/userHandlers'
 import { handleInputErrors } from '../modules/middleware'
-const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient()
+import prisma from '../db'
+import extendedPrisma from '../db'
 
 export const showWeapons: RequestHandler = async (req: Request, res: Response, next) => {
   try {
-    const weapons: any = await prisma.weapons.findMany({
+    const weapons: any = await extendedPrisma.weapons.findMany({
       orderBy: {
         serialNumber: 'asc'
       }
     })
     res.json({ weapons })
   } catch (e) {
+    next(e)
+  }
+}
+
+export const showWeapon: RequestHandler = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const weaponId = parseInt(id, 10)
+
+    if (isNaN(weaponId)) {
+      return res.status(400).json({ error: 'Invalid weapon ID format' })
+    }
+
+    console.log('Fetching weapon with ID:', weaponId)
+
+    const weapon: any = await prisma.weapons.findFirst({
+      where: { id: weaponId }
+    })
+
+    if (!weapon || weapon.length === 0) {
+      return res.status(404).json({ message: 'Weapon not found' })
+    }
+
+    console.log('Weapon found:', weapon)
+    res.status(200).json({ weapon: weapon })
+  } catch (e) {
+    console.log(e, 'Error fetching weapon')
     next(e)
   }
 }
@@ -52,7 +79,6 @@ export const updateProfileWeapon: RequestHandler = async (req, res, next) => {
     const weapon = await prisma.profileWeapons.findUnique({
       where: { id: weaponChargeId }
     })
-    console.log(weapon)
     if (!weapon) {
       console.error('Weapon not found:', id)
       return res.status(404).json({ error: 'Weapon not found' })
@@ -120,6 +146,50 @@ export const updateProfileWeaponAndLocation: RequestHandler = async (req, res, n
     console.log('Successfully deleted profileWeapon and updated weapon')
     res.json({ updateProfileWeapon, updatedWeapon }).status(200)
   } catch (e) {
+    next(e)
+  }
+}
+
+export const weaponEdit: RequestHandler = async (req, res, next) => {
+  try {
+    const { id } = req.params
+    const weaponId = parseInt(id, 10)
+
+    if (isNaN(weaponId)) {
+      return res.status(400).json({ error: 'Invalid weapon ID format' })
+    }
+
+    // Prepare update data with proper type conversion
+    const updateData: any = {}
+    console.log('Request body:', req.body)
+    if (req.body.model !== undefined) updateData.model = req.body.model
+    if (req.body.serialNumber !== undefined) updateData.serialNumber = req.body.serialNumber
+    if (req.body.type !== undefined)
+      updateData.type = req.body.type ? parseInt(req.body.type, 10) : undefined
+    if (req.body.location !== undefined)
+      updateData.location = req.body.location ? parseInt(req.body.location, 10) : undefined
+    if (req.body.Status !== undefined)
+      updateData.status = req.body.Status ? parseInt(req.body.Status, 10) : undefined
+    if (req.body.Caliber !== undefined)
+      updateData.caliber = req.body.Caliber ? parseInt(req.body.Caliber, 10) : undefined
+    if (req.body.brand !== undefined)
+      updateData.brand = req.body.brand ? parseInt(req.body.brand, 10) : undefined
+
+    // Update the weapon
+    console.log('Updating weapon with ID:', weaponId, 'with data:', updateData)
+    const updatedWeapon = await prisma.weapons.update({
+      where: {
+        id: weaponId
+      },
+      data: updateData
+    })
+
+    console.log('weapon edit', updatedWeapon)
+    res.status(200).json({ weapon: updatedWeapon })
+  } catch (e) {
+    if (e.code === 'P2025') {
+      return res.status(404).json({ error: 'Weapon not found' })
+    }
     next(e)
   }
 }
