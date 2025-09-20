@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response, Router } from 'express'
 import { body } from 'express-validator'
-import { handleInputErrors } from '../modules/middleware'
-import { deleteVacation } from '../handlers/vacationHadlers'
-import prisma from '../db'
+import { handleInputErrors } from '../modules/middleware.js'
+import { deleteVacation } from '../handlers/vacationHadlers.js'
+import prisma from '../db.js'
+import axios from 'axios'
 
 const vacationRouter = Router()
 export interface IGetUserAuthInfoRequest extends Request {
@@ -74,7 +75,6 @@ vacationRouter.delete(
   '/vacations/:id',
   async (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction) => {
     console.log(req.user)
-    const axios = require('axios')
     let data = {
       number: '5575992313592',
       text: 'teste de envio'

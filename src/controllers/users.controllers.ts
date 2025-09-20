@@ -1,10 +1,10 @@
 import { Response, Request, RequestHandler } from 'express'
 import { body } from 'express-validator'
-import { createUser, deleteUser } from '../handlers/userHandlers'
-import { handleInputErrors } from '../modules/middleware'
+import { createUser, deleteUser } from '../handlers/userHandlers.js'
+import { handleInputErrors } from '../modules/middleware.js'
 import { add } from 'lodash'
-import prisma from '../db'
-import extendedPrisma from '../db'
+import prisma from '../db.js'
+import extendedPrisma from '../db.js'
 
 export const showUsers: RequestHandler = async (req: Request, res: Response, next) => {
   try {

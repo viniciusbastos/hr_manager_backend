@@ -1,7 +1,11 @@
 import PDFDocument from 'pdfkit'
 import fs, { existsSync } from 'fs'
-const path = require('path')
+import path from 'path'
+import { fileURLToPath } from 'url'
 import axios from 'axios'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 const imagePath = path.join(__dirname, '../../images/pmba2.png')
 interface WeaponData {
   name: string

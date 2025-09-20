@@ -1,9 +1,9 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
-import { createUser, deleteUser } from '../handlers/userHandlers'
-import { handleInputErrors } from '../modules/middleware'
-import { showUsers, showUser, editUser } from '../controllers/users.controllers'
-import extendedPrisma from '../db'
+import { createUser, deleteUser } from '../handlers/userHandlers.js'
+import { handleInputErrors } from '../modules/middleware.js'
+import { showUsers, showUser, editUser } from '../controllers/users.controllers.js'
+import extendedPrisma from '../db.js'
 const usersRouter = Router()
 
 usersRouter.get('/user', showUsers)

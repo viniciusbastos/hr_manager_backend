@@ -1,9 +1,8 @@
-import { Weapons } from './../../node_modules/.prisma/client/index.d'
 import { Router } from 'express'
 import { body } from 'express-validator'
 import * as fs from 'fs'
-import { handleInputErrors } from '../modules/middleware'
-import { deleteVacation } from '../handlers/vacationHadlers'
+import { handleInputErrors } from '../modules/middleware.js'
+import { deleteVacation } from '../handlers/vacationHadlers.js'
 import { request } from 'http'
 import {
   newWeapons,
@@ -12,11 +11,11 @@ import {
   updateProfileWeapon,
   updateProfileWeaponAndLocation,
   weaponEdit
-} from '../controllers/weapons.controllers'
+} from '../controllers/weapons.controllers.js'
 
-import extendedPrisma from '../db'
-import prisma from '../db'
-import { WeaponRequestPDF } from '../modules/pdf'
+import extendedPrisma from '../db.js'
+import prisma from '../db.js'
+import { WeaponRequestPDF } from '../modules/pdf.js'
 
 const weaponsRouter = Router()
 
@@ -248,8 +247,8 @@ weaponsRouter.put('/weaponsfixed/:id', updateProfileWeaponAndLocation)
 
 weaponsRouter.post('/generate-pdf/:id', async (req, res) => {
   const id = parseInt(req.params.id)
-  const fs = require('fs')
-  const path = require('path')
+  const fs = await import('fs')
+  const path = await import('path')
   try {
     const weaponData: any[] = await prisma.$queryRaw`
       SELECT
