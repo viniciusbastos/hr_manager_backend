@@ -34,9 +34,6 @@ app.use(express.urlencoded({ extended: true }))
 // 👇️ specify origins to allow
 const whitelist = ['https://app.bastosdev.xyz', 'http://localhost:4173']
 
-// ✅ Enable pre-flight requests
-app.options('*', cors())
-
 const corsOptions = {
   credentials: true,
   origin: (origin, callback) => {
@@ -47,6 +44,9 @@ const corsOptions = {
     }
   }
 }
+
+// ✅ Enable pre-flight requests with same options
+app.options('*', cors(corsOptions))
 
 app.use(cors(corsOptions))
 
