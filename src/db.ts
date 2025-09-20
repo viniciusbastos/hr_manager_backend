@@ -1,9 +1,11 @@
 import { PrismaClient } from '@prisma/client'
+
 import { createClient } from 'redis'
 
 // Validate and extract environment variables
 const REDIS_HOST = process.env.REDIS_HOST_NAME || 'localhost'
 const REDIS_PORT = parseInt(process.env.REDIS_PORT || '6379', 10)
+
 
 if (isNaN(REDIS_PORT) || REDIS_PORT <= 0 || REDIS_PORT > 65535) {
   throw new Error('REDIS_PORT must be a valid port number between 1 and 65535.')
