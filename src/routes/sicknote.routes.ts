@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
-import { handleInputErrors } from '../modules/middleware'
+import { handleInputErrors } from '../modules/middleware.js'
 import { url } from 'inspector'
-import prisma from '../db'
+import prisma from '../db.js'
 const sicknoteRouter = Router()
 
 //Atestados Médicos

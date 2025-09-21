@@ -1,6 +1,6 @@
-import { Status } from './../../node_modules/.prisma/client/index.d'
-import { comparePasswords, createJWT, hashPassword } from './../modules/auth'
-import prisma from '../db'
+import { Status } from '@prisma/client'
+import { comparePasswords, createJWT, hashPassword } from '../modules/auth.js'
+import prisma from '../db.js'
 import { Request, Response } from 'express'
 
 export const deleteVacation = async (req: any, res: any) => {

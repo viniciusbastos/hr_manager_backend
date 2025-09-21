@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
-import { handleInputErrors } from './modules/middleware'
-import { deleteVacation } from './handlers/vacationHadlers'
-import prisma from './db'
+import { handleInputErrors } from './modules/middleware.js'
+import { deleteVacation } from './handlers/vacationHadlers.js'
+import prisma from './db.js'
 
 const router = Router()
 

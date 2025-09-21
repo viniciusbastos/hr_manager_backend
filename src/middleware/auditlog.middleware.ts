@@ -1,4 +1,4 @@
-import prisma from '../db'
+import prisma from '../db.js'
 import { NextFunction, Request, Response } from 'express'
 
 export interface IGetUserAuthInfoRequest extends Request {

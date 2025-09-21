@@ -15,16 +15,6 @@ import adminMiddleware from './middleware/admins.middleware.js'
 import { auditLog } from './middleware/auditlog.middleware.js'
 import vacationPlanRouter from './routes/vacationsPlan.routes.js'
 import auditLogsnoteRouter from './routes/auditlogs.routes.js'
-import pino from 'pino'
-import { Redis } from 'iovalkey'
-
-import {
-  CacheCase,
-  PrismaExtensionRedis,
-  type AutoCacheConfig,
-  type CacheConfig
-} from 'prisma-extension-redis'
-// import whatsappRouter from './routes/whatsapp.routes'
 
 app.use(morgan('dev'))
 app.use(express.json())

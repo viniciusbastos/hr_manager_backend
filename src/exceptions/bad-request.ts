@@ -1,4 +1,4 @@
-import { HttpException } from "./root";
+import { HttpException } from "./root.js";
 
 export class BadRequestsexception extends HttpException{
     
