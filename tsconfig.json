@@ -1,15 +1,21 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": false,
     "lib": ["esnext"],
     "esModuleInterop": true,
-    "declaration": true
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "ts-node": {
+    "esm": true
   },
   "include": ["src/**/*.ts", "src/routes/weapons.jest.js", "src/routes/weapons.test.jest"]
 }
