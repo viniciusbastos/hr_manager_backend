@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "module": "node16",
+    "moduleResolution": "node16",
     "sourceMap": true,
     "outDir": "./dist",
     "rootDir": "./src",
@@ -10,9 +10,7 @@
     "lib": ["esnext"],
     "esModuleInterop": true,
     "declaration": true,
-    "allowSyntheticDefaultImports": true,
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "allowSyntheticDefaultImports": true
   },
   "ts-node": {
     "esm": true

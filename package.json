@@ -14,12 +14,10 @@
     "nodemon": "^3.0.1",
     "prisma": "^5.11.0",
     "supertest": "^7.0.0",
-    "@types/supertest": "^6.0.2",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "tsx": "^4.7.0",
-    "typescript": "^5.2.2",
-    "@types/node": "^20.8.10"
+    "typescript": "^5.2.2"
   },
   "scripts": {
     "test": "jest --passWithNoTests",
