@@ -5,6 +5,7 @@ import { handleInputErrors } from '../modules/middleware.js'
 import { add } from 'lodash'
 import prisma from '../db.js'
 import extendedPrisma from '../db.js'
+import { CacheService, CacheTTL } from '../redis/cache.utils.js'
 
 export const showUsers: RequestHandler = async (req: Request, res: Response, next) => {
   try {
@@ -20,10 +21,10 @@ export const showUsers: RequestHandler = async (req: Request, res: Response, nex
 
 export const showUser: RequestHandler = async (req, res, next) => {
   try {
-    const { id } = req.params
+    const userId = req.params.id
     const user: any = await extendedPrisma.user.findUnique({
       where: {
-        id: id
+        id: userId
       },
       include: {
         profile: {
@@ -37,12 +38,9 @@ export const showUser: RequestHandler = async (req, res, next) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
-    console.log(user)
-    res.status(200)
-    res.json({ user: user })
-  } catch (e) {
-    console.log(e, 'erro aqui')
-    next(e)
+    res.json(user)
+  } catch (error) {
+    next(error)
   }
 }
 
@@ -86,6 +84,10 @@ export const editUser: RequestHandler = async (req, res, next) => {
         })
       }
     }
+
+    // Invalidate cache for the updated user
+    const cacheKey = CacheService.generateKey('api', `/api/user/${id}`)
+    await CacheService.del(cacheKey)
 
     // Fetch updated user with profile data
     const updatedUser = await extendedPrisma.user.findUnique({

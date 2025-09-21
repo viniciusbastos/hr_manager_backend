@@ -2106,6 +2106,13 @@
   resolved "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.6.tgz"
   integrity sha512-+0autS93xyXizIYiyL02FCY8N+KkKPhILhcUSA276HxzreZ16kl+cmwvV2qAM/PuCCwPXzOXOWhiPcw20uSFcA==
 
+"@types/redis@^4.0.10":
+  version "4.0.10"
+  resolved "https://registry.npmjs.org/@types/redis/-/redis-4.0.10.tgz"
+  integrity sha512-7CLy5b5fzzEGVcOccgZjoMlNpPhX6d10jEeRy2YWbFuaMNrSPc9ExRsMYsd+0VxvEHucf4EWx24Ja7cSU1FGUA==
+  dependencies:
+    redis "*"
+
 "@types/send@*":
   version "0.17.3"
   resolved "https://registry.npmjs.org/@types/send/-/send-0.17.3.tgz"
@@ -4640,7 +4647,7 @@ real-require@^0.2.0:
   resolved "https://registry.npmjs.org/real-require/-/real-require-0.2.0.tgz"
   integrity sha512-57frrGM/OCTLqLOAh0mhVA9VBMHd+9U7Zb2THMGdBUoZVOtGbJzjxsYGDJ3A9AYYCP4hn6y1TVbaOfzWtm5GFg==
 
-redis@^5.8.2:
+redis@*, redis@^5.8.2:
   version "5.8.2"
   resolved "https://registry.npmjs.org/redis/-/redis-5.8.2.tgz"
   integrity sha512-31vunZj07++Y1vcFGcnNWEf5jPoTkGARgfWI4+Tk55vdwHxhAvug8VEtW7Cx+/h47NuJTEg/JL77zAwC6E0OeA==

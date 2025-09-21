@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, Router } from 'express'
 import { body } from 'express-validator'
 import { handleInputErrors } from '../modules/middleware.js'
 import { deleteVacation } from '../handlers/vacationHadlers.js'
+
 import prisma from '../db.js'
 import axios from 'axios'
 

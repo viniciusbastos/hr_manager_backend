@@ -1,7 +1,6 @@
 import express from 'express'
 import router from './router.js'
 import { PrismaClient } from '@prisma/client'
-
 const app = express()
 import cors from 'cors'
 import morgan from 'morgan'
@@ -15,6 +14,9 @@ import adminMiddleware from './middleware/admins.middleware.js'
 import { auditLog } from './middleware/auditlog.middleware.js'
 import vacationPlanRouter from './routes/vacationsPlan.routes.js'
 import auditLogsnoteRouter from './routes/auditlogs.routes.js'
+import redisClient from './redis/client.js' // Import Redis client
+import { cacheMiddleware, invalidateCacheMiddleware } from './middleware/cache.middleware.js'
+import { CacheTTL } from './redis/cache.utils.js'
 
 app.use(morgan('dev'))
 app.use(express.json())
@@ -38,6 +40,15 @@ const corsOptions = {
 app.options('*', cors(corsOptions))
 
 app.use(cors(corsOptions))
+// Health check endpoint with Redis status
+app.get('/health', async (req, res) => {
+  const redisStatus = redisClient.isReady ? 'connected' : 'disconnected'
+  res.json({
+    status: 'ok',
+    redis: redisStatus,
+    timestamp: new Date().toISOString()
+  })
+})
 
 app.post('/api/user', createUser)
 app.post('/api/signin', signin)

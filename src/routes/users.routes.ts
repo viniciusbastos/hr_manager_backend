@@ -3,28 +3,37 @@ import { body } from 'express-validator'
 import { createUser, deleteUser } from '../handlers/userHandlers.js'
 import { handleInputErrors } from '../modules/middleware.js'
 import { showUsers, showUser, editUser } from '../controllers/users.controllers.js'
-import extendedPrisma from '../db.js'
+import prisma from '../db.js'
+import { cacheMiddleware, invalidateCacheMiddleware } from '../middleware/cache.middleware.js'
+
 const usersRouter = Router()
 
-usersRouter.get('/user', showUsers)
+// GET /user - Retrieve all users with caching
+usersRouter.get('/user', cacheMiddleware(), showUsers)
 
-usersRouter.get('/user/:id', showUser)
+// GET /user/:id - Retrieve a specific user by ID with caching
+usersRouter.get('/user/:id', cacheMiddleware(), showUser)
 
+// GET /user/search/:mat - Search users by mat number
 usersRouter.get('/user/search/:mat', async (req, res, next) => {
   try {
     const { mat } = req.params
     const user: any =
-      await extendedPrisma.$queryRaw`SELECT "User".id, "User"."name", "User".posto, "User".mat FROM "User" WHERE "mat" LIKE ${mat} `
+      await prisma.$queryRaw`SELECT "User".id, "User"."name", "User".posto, "User".mat FROM "User" WHERE "mat" LIKE ${mat} `
 
     res.json({ user: user })
   } catch (e) {
     next(e)
   }
 })
-usersRouter.post('/user', handleInputErrors, createUser)
 
-usersRouter.put('/edituser/:id', editUser)
+// POST /user - Create a new user
+usersRouter.post('/user', handleInputErrors, invalidateCacheMiddleware(['/api/user*']), createUser)
 
-usersRouter.delete('/user/:id', deleteUser)
+// PUT /edituser/:id - Update an existing user
+usersRouter.put('/edituser/:id', invalidateCacheMiddleware(['/api/user*']), editUser)
+
+// DELETE /user/:id - Delete a user
+usersRouter.delete('/user/:id', invalidateCacheMiddleware(['/api/user*']), deleteUser)
 
 export default usersRouter
