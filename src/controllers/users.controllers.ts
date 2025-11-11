@@ -49,6 +49,13 @@ export const editUser: RequestHandler = async (req, res, next) => {
     const { id } = req.params
     const { phone, address, ...userData } = req.body
 
+    // Trim string fields
+    if (userData.name) userData.name = userData.name.trim()
+    if (userData.email) userData.email = userData.email.trim()
+    if (userData.posto) userData.posto = userData.posto.trim()
+    const trimmedPhone = phone ? phone.trim() : phone
+    const trimmedAddress = address ? address.trim() : address
+
     // Update user data
     const user: any = await extendedPrisma.user.update({
       where: {
@@ -61,10 +68,10 @@ export const editUser: RequestHandler = async (req, res, next) => {
     })
 
     // Update or create profile with phone and address
-    if (phone !== undefined || address !== undefined) {
+    if (trimmedPhone !== undefined || trimmedAddress !== undefined) {
       const profileData: any = {}
-      if (phone !== undefined) profileData.phone = phone
-      if (address !== undefined) profileData.address = address
+      if (trimmedPhone !== undefined) profileData.phone = trimmedPhone
+      if (trimmedAddress !== undefined) profileData.address = trimmedAddress
 
       if (user.profile && user.profile.length > 0) {
         // Update existing profile
@@ -108,6 +115,7 @@ export const editUser: RequestHandler = async (req, res, next) => {
     res.status(200)
     res.json({ user: updatedUser })
   } catch (e) {
+    console.error('Error in editUser:', e)
     next(e)
   }
 }

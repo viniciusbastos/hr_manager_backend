@@ -31,9 +31,25 @@ usersRouter.get('/user/search/:mat', async (req, res, next) => {
 usersRouter.post('/user', handleInputErrors, invalidateCacheMiddleware(['/api/user*']), createUser)
 
 // PUT /edituser/:id - Update an existing user
-usersRouter.put('/edituser/:id', invalidateCacheMiddleware(['/api/user*']), editUser)
+usersRouter.put('/edituser/:id',
+  body('name').optional().isString().trim().isLength({ min: 1 }),
+  body('email').optional().isEmail().normalizeEmail(),
+  body('posto').optional().isString().trim(),
+  body('role').optional().isIn(['USER', 'ADMIN', 'GUEST']),
+  body('phone').optional().isString().trim().isLength({ min: 1 }),
+  body('address').optional().isString().trim().isLength({ min: 1 }),
+  handleInputErrors,
+  invalidateCacheMiddleware(['/api/user*']),
+  editUser)
 
 // DELETE /user/:id - Delete a user
 usersRouter.delete('/user/:id', invalidateCacheMiddleware(['/api/user*']), deleteUser)
+
+usersRouter.get('/efetivo', cacheMiddleware(), async (req, res) => {
+  const user =
+    await prisma.$queryRaw` SELECT "User".posto, COUNT(*)::int as qtd FROM "User" INNER JOIN "Profileunidade" ON "Profileunidade"."belongsToId" = "User".id  WHERE "Profileunidade"."belongsToUnidadeId" = 1 GROUP BY "User".posto`
+
+  res.json(user)
+})
 
 export default usersRouter

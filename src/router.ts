@@ -6,13 +6,6 @@ import prisma from './db.js'
 
 const router = Router()
 
-router.get('/efetivo', async (req, res) => {
-  const user =
-    await prisma.$queryRaw` SELECT "User".posto, COUNT(*)::int as qtd FROM "User" INNER JOIN "Profileunidade" ON "Profileunidade"."belongsToId" = "User".id  WHERE "Profileunidade"."belongsToUnidadeId" = 1 GROUP BY "User".posto`
-
-  res.json(user)
-})
-
 router.get('/efetivo/:id', (req, res) => {})
 
 router.post('/efetivo', (req, res) => {})
